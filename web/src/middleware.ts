@@ -6,10 +6,14 @@ const LOCALE_COOKIE = 'ebc_locale';
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // Skip middleware for assets, api, _next, favicon
+  // Skip middleware for assets, api, _next, favicon, auth callback.
+  // `/auth/callback` MUST stay un-prefixed because Supabase magic-link
+  // emails point at the bare path; redirecting it through locale prefix
+  // breaks the OAuth code-exchange.
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||
+    pathname.startsWith('/auth') ||
     pathname.startsWith('/brand') ||
     /\.[a-zA-Z0-9]+$/.test(pathname)
   ) {
@@ -43,5 +47,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!_next|api|brand|.*\\..*).*)'],
+  matcher: ['/((?!_next|api|auth|brand|.*\\..*).*)'],
 };
