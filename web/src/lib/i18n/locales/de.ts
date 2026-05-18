@@ -42,8 +42,8 @@ export const de = {
         body: 'Unsichtbar unter der Kleidung. Arbeit, Reise, Zuhause — überall.',
       },
       silicone: {
-        title: 'Medizinisches Silikon',
-        body: 'Hautfreundlich, austauschbar, langlebig (ISO 10993 biokompatibel).',
+        title: 'Hautfreundliches Silikon',
+        body: 'Austauschbare Silikon-Oberfläche — angenehm, leicht zu reinigen, langlebig.',
       },
     },
     how_it_works: {
@@ -63,7 +63,7 @@ export const de = {
       includes: {
         item: 'EBC Comfort beheizbares Pad',
         accu: 'USB-C-Kabel + 8000 mAh Akku',
-        silicone: '2 austauschbare medizinische Silikon-Einsätze',
+        silicone: '2 austauschbare Silikon-Einsätze',
         packaging: 'Diskrete Verpackung, kostenloser Versand',
         refund: '30-Tage Geld-zurück-Garantie',
         warranty: '1 Jahr Herstellergarantie',
@@ -99,7 +99,7 @@ export const de = {
         },
         washable: {
           q: 'Ist es waschbar? Sind die Einsätze austauschbar?',
-          a: 'Ja. Der medizinische Silikon-Einsatz (ISO 10993 biokompatibel) ist austauschbar und kann mit lauwarmem Wasser von Hand gewaschen werden. Das Paket enthält 2 Ersatz-Einsätze.',
+          a: 'Ja. Der Silikon-Einsatz ist austauschbar und kann mit lauwarmem Wasser von Hand gewaschen werden. Das Paket enthält 2 Ersatz-Einsätze.',
         },
         wellness: {
           q: 'Wellness- oder Medizinprodukt?',

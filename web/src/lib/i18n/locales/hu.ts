@@ -42,8 +42,8 @@ export const hu = {
         body: 'Ruházat alatt láthatatlan. Munkahely, utazás, otthon — bárhol.',
       },
       silicone: {
-        title: 'Orvosi szilikon',
-        body: 'Bőrbarát, cserélhető, tartós (ISO 10993 biokompatibilis).',
+        title: 'Bőrbarát szilikon',
+        body: 'Cserélhető szilikon felület — kényelmes, tisztítható, tartós.',
       },
     },
     how_it_works: {
@@ -63,7 +63,7 @@ export const hu = {
       includes: {
         item: 'EBC Comfort fűthető komfortbetét',
         accu: 'USB-C töltőkábel + 8000 mAh akkumulátor',
-        silicone: '2 db cserélhető orvosi szilikon betét',
+        silicone: '2 db cserélhető szilikon betét',
         packaging: 'Diszkrét csomagolás, ingyen kiszállítás',
         refund: '30 napos pénz-visszafizetési garancia',
         warranty: '1 év gyártói garancia',
@@ -81,7 +81,7 @@ export const hu = {
           author: 'Beáta, 41 · Debrecen',
         },
         zsofi: {
-          quote: 'Az orvosi szilikon betét kellemes érzés. USB-C töltés gyors, és az 5 fokozat valóban különböző. Megéri az árát.',
+          quote: 'A szilikon betét kellemes érzés. USB-C töltés gyors, és az 5 fokozat valóban különböző. Megéri az árát.',
           author: 'Zsófia, 29 · Szeged',
         },
       },
@@ -99,7 +99,7 @@ export const hu = {
         },
         washable: {
           q: 'Mosható? Cserélhető a szilikon betét?',
-          a: 'Igen. Az orvosi szilikon (ISO 10993 biokompatibilis) betét cserélhető, és kézzel langyos vízzel mosható. A csomag 2 db cserebetétet tartalmaz.',
+          a: 'Igen. A szilikon betét cserélhető, és kézzel langyos vízzel mosható. A csomag 2 db cserebetétet tartalmaz.',
         },
         wellness: {
           q: 'Mit jelent a wellness vs. orvosi eszköz?',

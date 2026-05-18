@@ -42,8 +42,8 @@ export const en = {
         body: 'Invisible under clothing. Work, travel, home — anywhere.',
       },
       silicone: {
-        title: 'Medical-grade silicone',
-        body: 'Skin-friendly, replaceable, durable (ISO 10993 biocompatible).',
+        title: 'Skin-friendly silicone',
+        body: 'Replaceable silicone surface — comfortable, easy to clean, durable.',
       },
     },
     how_it_works: {
@@ -63,7 +63,7 @@ export const en = {
       includes: {
         item: 'EBC Comfort heated pad',
         accu: 'USB-C cable + 8000 mAh battery',
-        silicone: '2 replaceable medical-grade silicone inserts',
+        silicone: '2 replaceable silicone inserts',
         packaging: 'Discreet packaging, free shipping',
         refund: '30-day money-back guarantee',
         warranty: '1-year manufacturer warranty',
@@ -99,7 +99,7 @@ export const en = {
         },
         washable: {
           q: 'Is it washable? Are the silicone inserts replaceable?',
-          a: 'Yes. The medical-grade silicone (ISO 10993 biocompatible) inserts are replaceable and can be hand-washed with lukewarm water. The package includes 2 spare inserts.',
+          a: 'Yes. The silicone inserts are replaceable and can be hand-washed with lukewarm water. The package includes 2 spare inserts.',
         },
         wellness: {
           q: 'What does wellness vs medical device mean?',

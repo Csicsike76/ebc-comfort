@@ -68,7 +68,7 @@ export default async function AboutPage({ params }: Props) {
               modell része a brandnek, nem külön marketinges trükk.
             </li>
             <li>
-              <strong>EU-gyártott bizalom</strong> — CE-LVD/EMC + RoHS + REACH + ISO 10993
+              <strong>EU-gyártott bizalom</strong> — CE-LVD/EMC + RoHS + REACH
               biokompatibilitás (szilikon). Magyar IP, kínai gyártás, EU-disztribúció.
             </li>
           </ul>
