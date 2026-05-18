@@ -5,6 +5,7 @@ import { getSupabaseServerClient } from '@/lib/supabase/server';
 import { formatMoneyCents } from '@/lib/admin/guard';
 import { renderMarkdown } from '@/lib/markdown';
 import PublicShell from '@/components/PublicShell';
+import AddToCartButton from '@/components/AddToCartButton';
 
 interface Props {
   params: Promise<{ locale: string }>;
@@ -140,21 +141,24 @@ export default async function ProductPage({ params }: Props) {
               ÁFA-val · szállítás kalkulálva a kosárban
             </p>
 
-            <div className="mt-8 flex flex-wrap gap-3">
-              <button
-                type="button"
-                disabled
-                className="px-7 py-3.5 rounded-full text-sm font-semibold bg-[var(--color-accent)] text-white opacity-50 cursor-not-allowed"
-                title="Hamarosan — Stripe integráció folyamatban"
-              >
-                🛒 {t('product.add_to_cart')} (hamarosan)
-              </button>
-              <a
-                href={`/${locale}/tamogatas`}
-                className="px-7 py-3.5 rounded-full text-sm font-semibold border-2 border-[var(--color-border)] hover:border-[var(--color-accent)] transition-colors"
-              >
-                Értesíts a launch-kor
-              </a>
+            <div className="mt-8">
+              <AddToCartButton
+                locale={locale}
+                label={t('product.add_to_cart')}
+                item={{
+                  product_id: product.id,
+                  sku: product.sku,
+                  name: tr?.name ?? 'EBC Comfort',
+                  unit_price_cents: product.base_price_cents,
+                  currency: product.currency,
+                  image_url:
+                    (images?.[0] as ImageRow | undefined)?.url ?? '/brand/logo-luxus.png',
+                }}
+              />
+              <p className="text-xs text-[var(--color-muted)] mt-3">
+                ⓘ Pre-launch fázis. Stripe-konfiguráció finalizálás alatt — a fizetés a végén
+                placeholder-üzemmódban lehet még; valós kártya-terhelés csak a launch-kor.
+              </p>
             </div>
 
             <hr className="my-8 border-[var(--color-border)]" />
