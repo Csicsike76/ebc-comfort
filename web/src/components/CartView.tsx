@@ -3,22 +3,39 @@ import { useState, useTransition } from 'react';
 import { useCart } from '@/lib/cart/CartContext';
 import { Locale } from '@/lib/i18n/config';
 import { bcp47 } from '@/lib/format';
+import { getCartDict } from '@/lib/i18n/cart';
+import {
+  getVatRate,
+  vatCentsFromNet,
+  shippingCents as computeShipping,
+  FREE_SHIPPING_THRESHOLD_CENTS,
+  DEFAULT_COUNTRY,
+} from '@/lib/vat';
 
 interface Props {
   locale: Locale;
   stripeConfigured: boolean;
 }
 
-const SHIPPING_CENTS = 1500; // €15 flat HU/EU
-const VAT_RATE = 0.27;
+// EU-27 country list (ISO 3166-1 alpha-2) — extended from the original 15 to
+// cover all 27 member states so checkout doesn't reject buyers from BG/HR/
+// CY/EE/EL/IE/LV/LT/LU/MT/SI/UK.
+const COUNTRIES: readonly string[] = [
+  'HU', 'AT', 'BE', 'BG', 'CY', 'CZ', 'DE', 'DK', 'EE', 'ES',
+  'FI', 'FR', 'GR', 'HR', 'IE', 'IT', 'LT', 'LU', 'LV', 'MT',
+  'NL', 'PL', 'PT', 'RO', 'SE', 'SI', 'SK',
+];
 
 export default function CartView({ locale, stripeConfigured }: Props) {
   const { items, subtotalCents, currency, setQuantity, remove, clear } = useCart();
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
+  const [country, setCountry] = useState<string>(DEFAULT_COUNTRY);
+  const dict = getCartDict(locale);
 
-  const shippingCents = items.length === 0 ? 0 : SHIPPING_CENTS;
-  const vatCents = Math.round(subtotalCents * VAT_RATE);
+  const shippingCents = computeShipping(subtotalCents, items.length);
+  const vatRate = getVatRate(country);
+  const vatCents = vatCentsFromNet(subtotalCents + shippingCents, vatRate);
   const totalCents = subtotalCents + shippingCents + vatCents;
 
   function formatMoney(cents: number) {
@@ -43,7 +60,7 @@ export default function CartView({ locale, stripeConfigured }: Props) {
         street: String(formData.get('street') ?? '').trim(),
         city: String(formData.get('city') ?? '').trim(),
         postcode: String(formData.get('postcode') ?? '').trim(),
-        country: String(formData.get('country') ?? 'HU').trim(),
+        country: String(formData.get('country') ?? DEFAULT_COUNTRY).trim(),
       },
     };
 
@@ -56,7 +73,7 @@ export default function CartView({ locale, stripeConfigured }: Props) {
         });
         const data = await res.json();
         if (!res.ok) {
-          setError(data.error ?? 'Ismeretlen hiba');
+          setError(data.error ?? dict.unknown_error);
           return;
         }
         if (data.url) {
@@ -67,9 +84,9 @@ export default function CartView({ locale, stripeConfigured }: Props) {
           window.location.href = `/${locale}/kosar/sikeres?order=${data.order_number ?? ''}&placeholder=1`;
           return;
         }
-        setError('Nincs visszaadott checkout URL.');
+        setError(dict.no_checkout_url);
       } catch (e) {
-        setError(e instanceof Error ? e.message : 'Hálózati hiba');
+        setError(e instanceof Error ? e.message : dict.network_error);
       }
     });
   }
@@ -77,16 +94,22 @@ export default function CartView({ locale, stripeConfigured }: Props) {
   if (items.length === 0) {
     return (
       <div className="glass-card p-10 text-center">
-        <p className="text-base mb-4">A kosár üres.</p>
+        <p className="text-base mb-4">{dict.empty_cart}</p>
         <a
           href={`/${locale}/termek`}
           className="inline-block px-6 py-2 rounded-full bg-[var(--color-accent)] text-white text-sm font-semibold"
         >
-          Termék megnézése →
+          {dict.view_product}
         </a>
       </div>
     );
   }
+
+  const freeShippingHint = dict.free_shipping_hint.replace(
+    '{threshold}',
+    formatMoney(FREE_SHIPPING_THRESHOLD_CENTS),
+  );
+  const vatPctLabel = (vatRate * 100).toFixed(vatRate * 10 % 1 === 0 ? 0 : 1);
 
   return (
     <div className="grid lg:grid-cols-[2fr_1fr] gap-6">
@@ -95,9 +118,9 @@ export default function CartView({ locale, stripeConfigured }: Props) {
           <table className="w-full text-sm">
             <thead className="bg-[var(--color-accent)]/5 text-left">
               <tr>
-                <th className="px-4 py-3 font-semibold">Termék</th>
-                <th className="px-4 py-3 font-semibold text-center">Mennyiség</th>
-                <th className="px-4 py-3 font-semibold text-right">Ár</th>
+                <th className="px-4 py-3 font-semibold">{dict.product_col}</th>
+                <th className="px-4 py-3 font-semibold text-center">{dict.qty_col}</th>
+                <th className="px-4 py-3 font-semibold text-right">{dict.price_col}</th>
                 <th></th>
               </tr>
             </thead>
@@ -113,7 +136,8 @@ export default function CartView({ locale, stripeConfigured }: Props) {
                       <button
                         type="button"
                         onClick={() => setQuantity(i.product_id, i.quantity - 1)}
-                        className="w-8 h-8 hover:bg-[var(--color-accent)]/10 rounded-l-full"
+                        className="w-11 h-11 hover:bg-[var(--color-accent)]/10 rounded-l-full"
+                        aria-label="−"
                       >
                         −
                       </button>
@@ -121,7 +145,8 @@ export default function CartView({ locale, stripeConfigured }: Props) {
                       <button
                         type="button"
                         onClick={() => setQuantity(i.product_id, i.quantity + 1)}
-                        className="w-8 h-8 hover:bg-[var(--color-accent)]/10 rounded-r-full"
+                        className="w-11 h-11 hover:bg-[var(--color-accent)]/10 rounded-r-full"
+                        aria-label="+"
                       >
                         +
                       </button>
@@ -134,8 +159,8 @@ export default function CartView({ locale, stripeConfigured }: Props) {
                     <button
                       type="button"
                       onClick={() => remove(i.product_id)}
-                      className="text-xs text-red-600 hover:underline"
-                      aria-label={`Eltávolít: ${i.name}`}
+                      className="text-xs text-red-600 hover:underline px-3 py-2"
+                      aria-label={`${dict.remove_label}: ${i.name}`}
                     >
                       ✕
                     </button>
@@ -151,27 +176,28 @@ export default function CartView({ locale, stripeConfigured }: Props) {
           className="glass-card p-6 space-y-4"
           aria-busy={pending}
         >
-          <h2 className="text-lg font-bold">Szállítási cím</h2>
-          <Field label="Teljes név" name="name" required />
+          <h2 className="text-lg font-bold">{dict.shipping_address}</h2>
+          <Field label={dict.full_name} name="name" required dict={dict} />
           <div className="grid sm:grid-cols-2 gap-3">
-            <Field label="Email" name="email" type="email" required />
-            <Field label="Telefon" name="phone" type="tel" />
+            <Field label={dict.email} name="email" type="email" required dict={dict} />
+            <Field label={dict.phone} name="phone" type="tel" dict={dict} />
           </div>
-          <Field label="Utca + házszám" name="street" required />
+          <Field label={dict.street} name="street" required dict={dict} />
           <div className="grid sm:grid-cols-3 gap-3">
-            <Field label="Irányítószám" name="postcode" required />
-            <Field label="Város" name="city" required />
+            <Field label={dict.postcode} name="postcode" required dict={dict} />
+            <Field label={dict.city} name="city" required dict={dict} />
             <label className="block">
               <span className="block text-xs uppercase tracking-wider text-[var(--color-muted)] mb-1">
-                Ország <span className="text-red-500">*</span>
+                {dict.country} <span className="text-red-500">{dict.required}</span>
               </span>
               <select
                 name="country"
                 required
-                defaultValue="HU"
+                value={country}
+                onChange={(e) => setCountry(e.target.value)}
                 className="w-full px-3 py-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] text-sm"
               >
-                {['HU','RO','DE','AT','SK','CZ','PL','IT','FR','ES','NL','PT','SE','DK','FI'].map((c) => (
+                {COUNTRIES.map((c) => (
                   <option key={c} value={c}>{c}</option>
                 ))}
               </select>
@@ -188,50 +214,54 @@ export default function CartView({ locale, stripeConfigured }: Props) {
               onClick={clear}
               className="px-4 py-2 rounded-full border border-[var(--color-border)] text-sm hover:bg-[var(--color-accent)]/10"
             >
-              Kosár ürítése
+              {dict.clear_cart}
             </button>
             <button
               type="submit"
               disabled={pending}
               className="px-7 py-2.5 rounded-full bg-[var(--color-accent)] text-white text-sm font-semibold disabled:opacity-50"
             >
-              {pending ? 'Folyamatban…' : stripeConfigured ? `Fizetés → ${formatMoney(totalCents)}` : `Teszt-rendelés → ${formatMoney(totalCents)}`}
+              {pending
+                ? dict.in_progress
+                : `${stripeConfigured ? dict.pay : dict.test_order} → ${formatMoney(totalCents)}`}
             </button>
           </div>
         </form>
       </section>
 
       <aside className="glass-card p-6 h-fit">
-        <h2 className="text-lg font-bold mb-3">Összesen</h2>
-        <Row label="Részösszeg" value={formatMoney(subtotalCents)} />
-        <Row label="Szállítás (EU)" value={formatMoney(shippingCents)} />
-        <Row label="ÁFA (27%)" value={formatMoney(vatCents)} />
+        <h2 className="text-lg font-bold mb-3">{dict.total}</h2>
+        <Row label={dict.subtotal} value={formatMoney(subtotalCents)} />
+        <Row
+          label={dict.shipping}
+          value={shippingCents === 0 ? dict.shipping_free : formatMoney(shippingCents)}
+        />
+        <Row label={`${dict.vat} (${vatPctLabel}% · ${country})`} value={formatMoney(vatCents)} />
         <hr className="my-3 border-[var(--color-border)]" />
-        <Row label="Fizetendő" value={formatMoney(totalCents)} bold />
-        <p className="text-xs text-[var(--color-muted)] mt-4">
-          A fizetés Stripe biztonságos check-out felületén történik. Kártya-adatokat NEM tárolunk.
-        </p>
+        <Row label={dict.total} value={formatMoney(totalCents)} bold />
+        {shippingCents > 0 && (
+          <p className="text-xs text-[var(--color-accent-2)] mt-3">{freeShippingHint}</p>
+        )}
+        <p className="text-xs text-[var(--color-muted)] mt-4">{dict.stripe_disclaimer}</p>
       </aside>
     </div>
   );
 }
 
-function Field({
-  label,
-  name,
-  type = 'text',
-  required,
-}: {
+interface FieldProps {
   label: string;
   name: string;
   type?: string;
   required?: boolean;
-}) {
+  dict: { required: string };
+}
+
+function Field({ label, name, type = 'text', required, dict }: FieldProps) {
   return (
     <label className="block">
       <span className="block text-xs uppercase tracking-wider text-[var(--color-muted)] mb-1">
         {label}
-        {required && <span className="text-red-500"> *</span>}
+        {required && <span className="text-red-500"> {dict.required}</span>}
       </span>
       <input
         type={type}

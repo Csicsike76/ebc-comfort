@@ -38,3 +38,6 @@ coverage/
 # OS
 *.pem
 *.key
+
+# Local Netlify folder
+.netlify

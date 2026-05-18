@@ -1,27 +1,13 @@
 import { NextResponse } from 'next/server';
 import { getSupabaseServerClient } from '@/lib/supabase/server';
 import { getSupabaseAdmin } from '@/lib/supabase/admin';
+import { findForbiddenKeywords } from '@/lib/compliance-keywords';
 
 export const runtime = 'nodejs';
 export const maxDuration = 60;
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-// Hard-coded HU/EN/DE medical-claim red flags for fast pre-check
-// (before calling Claude for nuance). These are forbidden in wellness-launch phase.
-const FORBIDDEN_KEYWORDS = [
-  // HU
-  'UTI', 'húgyúti', 'húgyhólyag', 'E. coli', 'E.coli', 'baktérium',
-  'antibiotikum', 'gyógyít', 'gyógyítás', 'kezel', 'kezelés',
-  'orvosi eszköz', 'gyógyhatás', 'tünet enyhít', 'fertőzés', 'gyulladás',
-  // EN
-  'urinary', 'bladder', 'bacteria', 'antibiotic', 'cure', 'treat',
-  'medical device', 'therapeutic', 'symptom relief', 'infection', 'inflammation',
-  // DE
-  'Harnweg', 'Blase', 'Bakterium', 'Antibiotikum', 'heilen', 'Behandlung',
-  'Medizinprodukt', 'therapeutisch', 'Infektion', 'Entzündung',
-];
 
 interface RequestBody {
   text: string;
@@ -63,8 +49,7 @@ export async function POST(req: Request) {
   }
 
   // Hard-rule keyword match
-  const lowerText = text.toLowerCase();
-  const hits = FORBIDDEN_KEYWORDS.filter((kw) => lowerText.includes(kw.toLowerCase()));
+  const hits = findForbiddenKeywords(text);
 
   // AI nuance review via Edge Function
   const aiPrompt = `Te egy compliance reviewer vagy az EBC Comfort wellness-brandhez. Az EBC Comfort egy fűthető komfortbetét — WELLNESS-eszköz, NEM orvosi eszköz.

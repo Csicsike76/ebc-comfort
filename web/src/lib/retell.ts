@@ -22,6 +22,17 @@ export function getRetellWebhookSecret(): string | null {
 export function verifyRetellSignature(rawBody: string, signatureHeader: string | null): boolean {
   const secret = getRetellWebhookSecret();
   if (!secret) return false;
+  return verifyHmacSignatureWithSecret(rawBody, signatureHeader, secret);
+}
+
+/**
+ * Pure verification helper for unit-testing without env reliance.
+ */
+export function verifyHmacSignatureWithSecret(
+  rawBody: string,
+  signatureHeader: string | null,
+  secret: string,
+): boolean {
   if (!signatureHeader) return false;
   const provided = signatureHeader.startsWith('sha256=')
     ? signatureHeader.slice(7)

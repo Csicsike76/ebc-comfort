@@ -7,6 +7,7 @@ import MarketingPixels from '@/components/MarketingPixels';
 import UtmTracker from '@/components/UtmTracker';
 import CookieConsent from '@/components/CookieConsent';
 import CookieSettingsLink from '@/components/CookieSettingsLink';
+import MobileNav from '@/components/MobileNav';
 import { CartProvider } from '@/lib/cart/CartContext';
 import { Locale } from '@/lib/i18n/config';
 import { getDict, tt } from '@/lib/i18n';
@@ -52,6 +53,18 @@ export default function PublicShell({ locale, children }: Props) {
               <CartIndicator locale={locale} />
               <ThemeToggle locale={locale} />
               <LocaleSwitcher currentLocale={locale} />
+              <MobileNav
+                locale={locale}
+                items={[
+                  { href: '/termek', label: t('common.products') },
+                  { href: '/edukacio', label: t('common.education') },
+                  { href: '/tamogatas', label: t('common.support') },
+                  { href: '/rolunk', label: t('common.about') },
+                  { href: '/gyik', label: 'GY.I.K.' },
+                  { href: '/aszf', label: 'ÁSZF' },
+                  { href: '/adatvedelem', label: 'Adatvédelem' },
+                ]}
+              />
             </div>
           </div>
         </header>

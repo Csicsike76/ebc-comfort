@@ -4,6 +4,11 @@ import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import { getStripe, isStripeConfigured } from '@/lib/stripe';
 import { isValidLocale } from '@/lib/i18n/config';
 import { sendOrderConfirmation } from '@/lib/email/send';
+import {
+  getVatRate,
+  vatCentsFromNet,
+  shippingCents as computeShipping,
+} from '@/lib/vat';
 
 interface CheckoutItem {
   product_id: string;
@@ -19,9 +24,6 @@ interface ShippingAddress {
   postcode: string;
   country: string;
 }
-
-const SHIPPING_CENTS = 1500;
-const VAT_RATE = 0.27;
 
 export async function POST(req: Request) {
   let payload: { locale: string; items: CheckoutItem[]; shipping_address: ShippingAddress };
@@ -115,8 +117,10 @@ export async function POST(req: Request) {
     });
   }
 
-  const shippingCents = SHIPPING_CENTS;
-  const vatCents = Math.round(subtotalCents * VAT_RATE);
+  // Free-shipping threshold + destination-country VAT (VAT-OSS pre-registration).
+  const shippingCents = computeShipping(subtotalCents, lineItems.length);
+  const vatRate = getVatRate(shipping_address.country);
+  const vatCents = vatCentsFromNet(subtotalCents + shippingCents, vatRate);
   const totalCents = subtotalCents + shippingCents + vatCents;
 
   // Auth (optional — guest checkout allowed)
@@ -134,6 +138,8 @@ export async function POST(req: Request) {
       total_cents: totalCents,
       shipping_address,
       shipping_method: 'eu-standard',
+      billing_phone: shipping_address.phone ?? null,
+      shipping_phone: shipping_address.phone ?? null,
     })
     .select('id, order_number')
     .single();
@@ -150,7 +156,9 @@ export async function POST(req: Request) {
     product_id: l.product.id,
     quantity: l.quantity,
     unit_price_cents: l.unit_price_cents,
-    vat_rate_pct: l.product.vat_rate_pct,
+    // Use destination-country VAT (B2C VAT-OSS pre-registration). Falls back
+    // to the per-product rate if the buyer's country is unknown.
+    vat_rate_pct: vatRate * 100,
     line_total_cents: l.line_total_cents,
   }));
   const { error: itemsErr } = await admin.from('order_items').insert(orderItemsRows);

@@ -8,70 +8,14 @@ import {
   CONSENT_VERSION,
 } from '@/lib/cookie-consent';
 import { Locale } from '@/lib/i18n/config';
+import { getCookieConsentDict } from '@/lib/i18n/cookie-consent-dict';
 
 interface Props {
   locale: Locale;
 }
 
-const COPY: Record<string, Record<string, string>> = {
-  hu: {
-    title: 'Cookie-beállítások',
-    body: 'A weboldal cookie-kat használ a működéshez, az élmény javításához és (hozzájárulás esetén) statisztikai + marketing célokra. Részletes leírás:',
-    detailsLink: 'Cookie-tájékoztató',
-    customize: 'Testreszab',
-    acceptAll: 'Mind elfogadom',
-    onlyNecessary: 'Csak szükségesek',
-    save: 'Mentés',
-    cat_necessary: 'Szükséges (mindig aktív)',
-    cat_necessary_desc: 'Bejelentkezés, biztonsági token, kosár tartalma. Ezek nélkül a webshop nem működik.',
-    cat_functional: 'Funkcionális',
-    cat_functional_desc: 'Téma + paletta-preferencia, nyelvi beállítás emlékezete.',
-    cat_analytics: 'Analitika',
-    cat_analytics_desc: 'Google Analytics — látogatottság-mérés. Nem személyazonosító.',
-    cat_marketing: 'Marketing',
-    cat_marketing_desc: 'Meta + TikTok + Google Ads pixelek — reklám-attribució.',
-    settings: 'Cookie-beállítások',
-  },
-  en: {
-    title: 'Cookie settings',
-    body: 'This site uses cookies for operation, experience, and (with consent) analytics + marketing. Details:',
-    detailsLink: 'Cookie notice',
-    customize: 'Customize',
-    acceptAll: 'Accept all',
-    onlyNecessary: 'Only necessary',
-    save: 'Save',
-    cat_necessary: 'Necessary (always on)',
-    cat_necessary_desc: 'Login, CSRF, cart contents. Required for the webshop to function.',
-    cat_functional: 'Functional',
-    cat_functional_desc: 'Theme + palette + language preference memory.',
-    cat_analytics: 'Analytics',
-    cat_analytics_desc: 'Google Analytics — site visit measurement.',
-    cat_marketing: 'Marketing',
-    cat_marketing_desc: 'Meta + TikTok + Google Ads pixels.',
-    settings: 'Cookie settings',
-  },
-  de: {
-    title: 'Cookie-Einstellungen',
-    body: 'Diese Website verwendet Cookies. Details:',
-    detailsLink: 'Cookie-Hinweis',
-    customize: 'Anpassen',
-    acceptAll: 'Alle akzeptieren',
-    onlyNecessary: 'Nur notwendige',
-    save: 'Speichern',
-    cat_necessary: 'Notwendig (immer aktiv)',
-    cat_necessary_desc: 'Login, CSRF, Warenkorb.',
-    cat_functional: 'Funktional',
-    cat_functional_desc: 'Theme- und Sprach-Voreinstellungen.',
-    cat_analytics: 'Analytik',
-    cat_analytics_desc: 'Google Analytics.',
-    cat_marketing: 'Marketing',
-    cat_marketing_desc: 'Meta + TikTok + Google Ads Pixel.',
-    settings: 'Cookie-Einstellungen',
-  },
-};
-
 export default function CookieConsent({ locale }: Props) {
-  const t = COPY[locale] ?? COPY.en;
+  const t = getCookieConsentDict(locale);
   const [open, setOpen] = useState(false);
   const [showCustomize, setShowCustomize] = useState(false);
   const [state, setState] = useState<ConsentState>(defaultConsent());
@@ -104,6 +48,10 @@ export default function CookieConsent({ locale }: Props) {
     setState(payload);
     setOpen(false);
     if (typeof window !== 'undefined') {
+      // Dispatch event so consent-gated components (UtmTracker, pixels) can
+      // re-evaluate without a full page reload — but reload anyway so any
+      // server-side gated content (analytics scripts) re-renders cleanly.
+      window.dispatchEvent(new Event('ebc:consent-changed'));
       window.location.reload();
     }
   }
