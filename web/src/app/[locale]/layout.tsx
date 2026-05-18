@@ -82,6 +82,51 @@ const META_BY_LOCALE: Partial<Record<Locale, { title: string; description: strin
     description:
       'Hillitty, kannettava lämpö — 5 tasoa (50-70 °C), 8000 mAh akku, USB-C-lataus. Wellness alavatsan mukavuuteen.',
   },
+  bg: {
+    title: 'EBC Comfort — Затоплящ комфортен пад',
+    description:
+      'Дискретна, преносима топлина — 5 нива (50-70 °C), батерия 8000 mAh, зареждане USB-C. Wellness за комфорт в долната част на корема.',
+  },
+  hr: {
+    title: 'EBC Comfort — Grijaći jastučić udobnosti',
+    description:
+      'Diskretna, prijenosna toplina — 5 razina (50-70 °C), baterija 8000 mAh, USB-C punjenje. Wellness za udobnost donjeg trbuha.',
+  },
+  et: {
+    title: 'EBC Comfort — Soojendav mugavuspadi',
+    description:
+      'Diskreetne, kaasaskantav soojus — 5 taset (50-70 °C), 8000 mAh aku, USB-C laadimine. Heaolu alakõhu mugavuseks.',
+  },
+  el: {
+    title: 'EBC Comfort — Θερμαντικό μαξιλαράκι άνεσης',
+    description:
+      'Διακριτική, φορητή ζεστασιά — 5 επίπεδα (50-70 °C), μπαταρία 8000 mAh, φόρτιση USB-C. Συσκευή ευεξίας για άνεση κάτω κοιλιάς.',
+  },
+  ga: {
+    title: 'EBC Comfort — Lonnán teasa compordach',
+    description:
+      'Teas discréideach, iniompartha — 5 leibhéal (50-70 °C), ceallraí 8000 mAh, luchtú USB-C. Folláine do chompord an bholg íochtair.',
+  },
+  lv: {
+    title: 'EBC Comfort — Sildošais komforta spilventiņš',
+    description:
+      'Diskrēts, pārnēsājams siltums — 5 līmeņi (50-70 °C), 8000 mAh akumulators, USB-C uzlāde. Labsajūta vēdera apakšdaļas komfortam.',
+  },
+  lt: {
+    title: 'EBC Comfort — Šildoma komforto pagalvėlė',
+    description:
+      'Diskretiškas, nešiojamas šilumos šaltinis — 5 lygiai (50-70 °C), 8000 mAh baterija, USB-C įkrovimas. Wellness apatinės pilvo srities komfortui.',
+  },
+  mt: {
+    title: 'EBC Comfort — Imnatar tas-sħana għall-kumdità',
+    description:
+      'Sħana diskreta u portabbli — 5 livelli (50-70 °C), batterija 8000 mAh, iċċarġjar USB-C. Wellness għall-kumdità tan-naħa t\'isfel taż-żaqq.',
+  },
+  sl: {
+    title: 'EBC Comfort — Grelna blazina za udobje',
+    description:
+      'Diskretna, prenosna toplota — 5 stopenj (50-70 °C), baterija 8000 mAh, polnjenje USB-C. Wellness za udobje spodnjega trebuha.',
+  },
 };
 import ThemeBootstrap from '@/components/ThemeBootstrap';
 import PaletteBootstrap from '@/components/PaletteBootstrap';

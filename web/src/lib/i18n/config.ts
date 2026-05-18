@@ -2,6 +2,8 @@ export const SUPPORTED_LOCALES = [
   'hu', 'en', 'de', 'fr', 'it', 'es',
   'pl', 'ro', 'nl', 'pt', 'cs', 'sk',
   'sv', 'da', 'fi',
+  // EU official languages — added 2026-05-18
+  'bg', 'hr', 'et', 'el', 'ga', 'lv', 'lt', 'mt', 'sl',
 ] as const;
 export type Locale = (typeof SUPPORTED_LOCALES)[number];
 
@@ -24,6 +26,15 @@ export const LOCALE_NAMES: Record<Locale, string> = {
   sv: 'Svenska',
   da: 'Dansk',
   fi: 'Suomi',
+  bg: 'Български',
+  hr: 'Hrvatski',
+  et: 'Eesti',
+  el: 'Ελληνικά',
+  ga: 'Gaeilge',
+  lv: 'Latviešu',
+  lt: 'Lietuvių',
+  mt: 'Malti',
+  sl: 'Slovenščina',
 };
 
 export const LOCALE_FLAGS: Record<Locale, string> = {
@@ -42,6 +53,15 @@ export const LOCALE_FLAGS: Record<Locale, string> = {
   sv: '🇸🇪',
   da: '🇩🇰',
   fi: '🇫🇮',
+  bg: '🇧🇬',
+  hr: '🇭🇷',
+  et: '🇪🇪',
+  el: '🇬🇷',
+  ga: '🇮🇪',
+  lv: '🇱🇻',
+  lt: '🇱🇹',
+  mt: '🇲🇹',
+  sl: '🇸🇮',
 };
 
 export function isValidLocale(loc: string): loc is Locale {

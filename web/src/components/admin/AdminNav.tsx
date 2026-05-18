@@ -3,27 +3,33 @@ import { useState, useRef, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { getSupabaseBrowserClient } from '@/lib/supabase/client';
 import { Locale } from '@/lib/i18n/config';
+import { getAdminDict, type AdminDict } from '@/lib/i18n/admin';
 
 interface Props {
   locale: Locale;
   email: string;
 }
 
-const TABS = [
-  { key: 'dashboard', label: 'Áttekintés', href: '' },
-  { key: 'products', label: 'Termékek', href: '/products' },
-  { key: 'orders', label: 'Rendelések', href: '/orders' },
-  { key: 'support', label: 'Támogatás', href: '/support' },
-  { key: 'articles', label: 'Edukáció', href: '/articles' },
-  { key: 'donations', label: 'Donations', href: '/donations' },
-  { key: 'chat', label: 'AI chat', href: '/chat' },
-  { key: 'calls', label: 'Hívások', href: '/calls' },
-  { key: 'marketing', label: 'Marketing', href: '/marketing' },
-  { key: 'users', label: 'Felhasználók', href: '/users' },
-  { key: 'i18n', label: 'Fordítások', href: '/i18n' },
-  { key: 'legal-docs', label: 'Jogi', href: '/legal-docs' },
-  { key: 'compliance', label: 'Compliance', href: '/compliance' },
-  { key: 'settings', label: 'Beállítások', href: '/settings' },
+interface Tab {
+  key: keyof AdminDict['nav']['tabs'];
+  href: string;
+}
+
+const TABS: Tab[] = [
+  { key: 'dashboard', href: '' },
+  { key: 'products', href: '/products' },
+  { key: 'orders', href: '/orders' },
+  { key: 'support', href: '/support' },
+  { key: 'articles', href: '/articles' },
+  { key: 'donations', href: '/donations' },
+  { key: 'chat', href: '/chat' },
+  { key: 'calls', href: '/calls' },
+  { key: 'marketing', href: '/marketing' },
+  { key: 'users', href: '/users' },
+  { key: 'i18n', href: '/i18n' },
+  { key: 'legal', href: '/legal-docs' },
+  { key: 'compliance', href: '/compliance' },
+  { key: 'settings', href: '/settings' },
 ];
 
 export default function AdminNav({ locale, email }: Props) {
@@ -31,6 +37,7 @@ export default function AdminNav({ locale, email }: Props) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const dict = getAdminDict(locale);
 
   useEffect(() => {
     function onDocClick(e: MouseEvent) {
@@ -40,7 +47,6 @@ export default function AdminNav({ locale, email }: Props) {
     return () => document.removeEventListener('click', onDocClick);
   }, []);
 
-  // Close menu on route change
   useEffect(() => { setOpen(false); }, [pathname]);
 
   async function signOut() {
@@ -55,12 +61,14 @@ export default function AdminNav({ locale, email }: Props) {
     return pathname.startsWith(full);
   }) ?? TABS[0];
 
+  const tabLabel = (key: Tab['key']) => dict.nav.tabs[key];
+
   return (
     <header className="app-header">
       <div className="max-w-7xl mx-auto safe-x py-3 flex items-center justify-between gap-3">
         <a href={`/${locale}/admin`} className="flex items-center gap-2 font-bold flex-shrink-0">
           <span className="inline-block w-7 h-7 rounded-full bg-[var(--color-accent)]" />
-          <span className="hidden sm:inline">EBC Admin</span>
+          <span className="hidden sm:inline">{dict.nav.brand}</span>
         </a>
 
         {/* Desktop tabs */}
@@ -78,7 +86,7 @@ export default function AdminNav({ locale, email }: Props) {
                     : 'hover:bg-[var(--color-accent)]/10'
                 }`}
               >
-                {t.label}
+                {tabLabel(t.key)}
               </a>
             );
           })}
@@ -92,7 +100,7 @@ export default function AdminNav({ locale, email }: Props) {
             aria-haspopup="menu"
             aria-expanded={open}
           >
-            <span>☰ {currentTab.label}</span>
+            <span>☰ {tabLabel(currentTab.key)}</span>
             <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden>
               <path d="M2 4l3 3 3-3" stroke="currentColor" strokeWidth="1.5" fill="none" />
             </svg>
@@ -111,7 +119,7 @@ export default function AdminNav({ locale, email }: Props) {
                     }`}
                     role="menuitem"
                   >
-                    {t.label}
+                    {tabLabel(t.key)}
                   </a>
                 </li>
               ))}
@@ -125,7 +133,7 @@ export default function AdminNav({ locale, email }: Props) {
             onClick={signOut}
             className="px-3 py-1.5 rounded-full border border-[var(--color-border)] hover:border-[var(--color-accent)]"
           >
-            Kilépés
+            {dict.nav.sign_out}
           </button>
         </div>
       </div>

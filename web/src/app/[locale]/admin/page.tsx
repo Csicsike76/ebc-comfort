@@ -1,6 +1,7 @@
 import { redirect, notFound } from 'next/navigation';
 import { isValidLocale, Locale } from '@/lib/i18n/config';
 import { getSupabaseServerClient } from '@/lib/supabase/server';
+import { getAdminDict } from '@/lib/i18n/admin';
 
 interface Props {
   params: Promise<{ locale: string }>;
@@ -49,6 +50,7 @@ export default async function AdminDashboard({ params }: Props) {
   const { locale: localeParam } = await params;
   if (!isValidLocale(localeParam)) notFound();
   const locale = localeParam as Locale;
+  const dict = getAdminDict(locale);
 
   const supa = await getSupabaseServerClient();
   const { data: { user } } = await supa.auth.getUser();
@@ -66,22 +68,22 @@ export default async function AdminDashboard({ params }: Props) {
   const stats = await getStats();
 
   const cards: Stat[] = [
-    { label: 'Rendelések', value: String(stats.orders), href: `/${locale}/admin/orders` },
-    { label: 'Donations', value: String(stats.donations), href: `/${locale}/admin/donations` },
-    { label: 'Támogatási kérvény (függőben)', value: `${stats.supportPending} / ${stats.supportTotal}`, href: `/${locale}/admin/support` },
-    { label: 'AI chat session', value: String(stats.chatTotal), href: `/${locale}/admin/chat` },
-    { label: 'Cikkek', value: String(stats.articles), href: `/${locale}/admin/articles` },
-    { label: 'Termékek', value: String(stats.products), href: `/${locale}/admin/products` },
-    { label: 'Regisztrált felhasználók', value: String(stats.users), hint: 'profiles' },
-    { label: 'Audit-log bejegyzés', value: String(stats.audit), hint: 'append-only' },
-    { label: 'Telefonos hívás (Retell)', value: String(stats.callLogs), hint: 'jövőbeli' },
+    { label: dict.dashboard.cards.orders, value: String(stats.orders), href: `/${locale}/admin/orders` },
+    { label: dict.dashboard.cards.donations, value: String(stats.donations), href: `/${locale}/admin/donations` },
+    { label: dict.dashboard.cards.support_pending, value: `${stats.supportPending} / ${stats.supportTotal}`, href: `/${locale}/admin/support` },
+    { label: dict.dashboard.cards.chat, value: String(stats.chatTotal), href: `/${locale}/admin/chat` },
+    { label: dict.dashboard.cards.articles, value: String(stats.articles), href: `/${locale}/admin/articles` },
+    { label: dict.dashboard.cards.products, value: String(stats.products), href: `/${locale}/admin/products` },
+    { label: dict.dashboard.cards.users, value: String(stats.users), hint: dict.dashboard.hints.users },
+    { label: dict.dashboard.cards.audit, value: String(stats.audit), hint: dict.dashboard.hints.audit },
+    { label: dict.dashboard.cards.calls, value: String(stats.callLogs), hint: dict.dashboard.hints.calls },
   ];
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
-      <h1 className="text-3xl font-bold mb-2">Áttekintés</h1>
+      <h1 className="text-3xl font-bold mb-2">{dict.dashboard.title}</h1>
       <p className="text-sm text-[var(--color-muted)] mb-8">
-        EBC NGO platform · {user.email}
+        {dict.dashboard.subtitle_prefix} · {user.email}
       </p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -106,7 +108,7 @@ export default async function AdminDashboard({ params }: Props) {
       </div>
 
       <section className="mt-12 glass-card p-6">
-        <h2 className="text-lg font-bold mb-3">Gyors-akciók</h2>
+        <h2 className="text-lg font-bold mb-3">{dict.dashboard.quick_actions.title}</h2>
         <div className="flex flex-wrap gap-3 text-sm">
           <a
             href={`https://supabase.com/dashboard/project/kdfoaamnmzhrdbrzawtf/editor`}
@@ -114,7 +116,7 @@ export default async function AdminDashboard({ params }: Props) {
             rel="noopener"
             className="px-4 py-2 rounded-full border border-[var(--color-border)] hover:border-[var(--color-accent)]"
           >
-            Supabase Studio →
+            {dict.dashboard.quick_actions.supabase} →
           </a>
           <a
             href={`https://supabase.com/dashboard/project/kdfoaamnmzhrdbrzawtf/auth/users`}
@@ -122,7 +124,7 @@ export default async function AdminDashboard({ params }: Props) {
             rel="noopener"
             className="px-4 py-2 rounded-full border border-[var(--color-border)] hover:border-[var(--color-accent)]"
           >
-            Auth users →
+            {dict.dashboard.quick_actions.auth_users} →
           </a>
           <a
             href={`https://app.netlify.com/projects/ebc-comfort`}
@@ -130,13 +132,13 @@ export default async function AdminDashboard({ params }: Props) {
             rel="noopener"
             className="px-4 py-2 rounded-full border border-[var(--color-border)] hover:border-[var(--color-accent)]"
           >
-            Netlify dashboard →
+            {dict.dashboard.quick_actions.netlify} →
           </a>
           <a
             href={`/${locale}/admin/gdpr`}
             className="px-4 py-2 rounded-full border border-[var(--color-border)] hover:border-[var(--color-accent)]"
           >
-            GDPR export/erase
+            {dict.dashboard.quick_actions.gdpr}
           </a>
         </div>
       </section>

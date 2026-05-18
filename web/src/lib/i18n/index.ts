@@ -13,6 +13,15 @@ import { sk } from './locales/sk';
 import { sv } from './locales/sv';
 import { da } from './locales/da';
 import { fi } from './locales/fi';
+import { bg } from './locales/bg';
+import { hr } from './locales/hr';
+import { et } from './locales/et';
+import { el } from './locales/el';
+import { ga } from './locales/ga';
+import { lv } from './locales/lv';
+import { lt } from './locales/lt';
+import { mt } from './locales/mt';
+import { sl } from './locales/sl';
 import { Locale, DEFAULT_LOCALE, FALLBACK_LOCALE } from './config';
 
 type Dict = typeof hu;
@@ -33,6 +42,15 @@ const dictionaries: Partial<Record<Locale, Dict>> = {
   sv: sv as Dict,
   da: da as Dict,
   fi: fi as Dict,
+  bg: bg as Dict,
+  hr: hr as Dict,
+  et: et as Dict,
+  el: el as Dict,
+  ga: ga as Dict,
+  lv: lv as Dict,
+  lt: lt as Dict,
+  mt: mt as Dict,
+  sl: sl as Dict,
 };
 
 export function getDict(locale: Locale): Dict {
