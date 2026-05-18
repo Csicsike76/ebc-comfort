@@ -119,6 +119,11 @@ update public.legal_documents
     and (body_markdown ilike '%TEMPLATE%'
       or body_markdown ilike '%pending legal review%'
       or body_markdown ilike '%PLACEHOLDER%'
-      or body_markdown ilike '%(template%');
+      or body_markdown ilike '%(template%'
+      -- DE-locale equivalents
+      or body_markdown ilike '%VORLAGE%'
+      or body_markdown ilike '%anwaltliche%'
+      or body_markdown ilike '%(wie EN%'
+      or body_markdown ilike '%(Tabelle wie%');
 
 comment on table public.stripe_events is 'Stripe webhook idempotency log (event.id PK). Service-role only.';
