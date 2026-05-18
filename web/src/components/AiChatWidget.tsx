@@ -60,21 +60,21 @@ export default function AiChatWidget({ locale = DEFAULT_LOCALE }: Props) {
 
   return (
     <>
-      {/* Floating button — bottom-left (bottom-left corner-globe moved up to mid-left,
-          bottom-right corner-globe back to original) */}
+      {/* Floating button — RIGHT side, ABOVE bottom-right corner-globe (top:84+150=234 down,
+          bottom-right globe top-edge at bottom:162). Bubble sits between, NOT covering either. */}
       <button
         onClick={() => setOpen((o) => !o)}
         aria-label={t('chat.title')}
-        className="fixed bottom-6 left-6 w-14 h-14 rounded-full bg-[var(--color-accent)] text-white shadow-lg hover:bg-[var(--color-accent-2)] transition-colors flex items-center justify-center z-40"
+        className="chat-bubble fixed right-6 w-14 h-14 rounded-full bg-[var(--color-accent)] text-white shadow-lg hover:bg-[var(--color-accent-2)] transition-colors flex items-center justify-center z-40"
       >
         {open ? '✕' : '💬'}
       </button>
 
-      {/* Chat panel opens upward from bottom-left */}
+      {/* Chat panel opens upward from the bubble (above bottom-right globe) */}
       {open && (
         <div
           id="chat"
-          className="fixed bottom-24 left-6 w-[360px] max-w-[calc(100vw-2rem)] h-[520px] max-h-[calc(100vh-8rem)] glass-card flex flex-col z-40 overflow-hidden"
+          className="chat-panel fixed right-6 w-[360px] max-w-[calc(100vw-2rem)] h-[520px] max-h-[calc(100vh-8rem)] glass-card flex flex-col z-40 overflow-hidden"
         >
           <header className="px-4 py-3 border-b border-[var(--color-border)] flex items-center justify-between">
             <div className="font-semibold text-sm">{t('chat.title')}</div>

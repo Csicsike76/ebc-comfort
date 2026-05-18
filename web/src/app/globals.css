@@ -240,19 +240,34 @@ img, video, svg { max-width: 100%; height: auto; display: block; }
 
 [data-theme="dark"] .corner-globe { opacity: 0.75; }
 
+/* All 4 globes in their 4 corners (original layout) */
 .corner-globe.pos-tl { top: 84px; left: 12px; }
 .corner-globe.pos-tr { top: 84px; right: 12px; }
+.corner-globe.pos-bl { bottom: 12px; left: 12px; }
 .corner-globe.pos-br { bottom: 12px; right: 12px; }
-/* bottom-left globe moved up to ~260px (mid-left cluster with top-left)
-   so bottom-left corner is free for AI chat bubble */
-.corner-globe.pos-bl { top: 260px; left: 12px; bottom: auto; }
 
 @media (max-width: 720px) {
   .corner-globe { width: 96px; height: 96px; }
   .corner-globe.pos-tl,
   .corner-globe.pos-tr { top: 68px; }
+  .corner-globe.pos-bl,
   .corner-globe.pos-br { bottom: 12px; }
-  .corner-globe.pos-bl { top: 180px; }
+}
+
+/* AI chat bubble — RIGHT side, ABOVE bottom-right corner-globe.
+   bottom-right globe: bottom:12px + height:150px → top-edge at bottom:162px (desktop)
+                       bottom:12px + height:96px  → top-edge at bottom:108px (mobile)
+   Bubble bottom is set above globe top-edge so they never overlap. */
+.chat-bubble {
+  bottom: 180px;
+}
+.chat-panel {
+  /* panel opens above bubble: 180 + 56 (bubble height) + 16 gap = 252 */
+  bottom: 252px;
+}
+@media (max-width: 720px) {
+  .chat-bubble { bottom: 126px; }
+  .chat-panel  { bottom: 198px; }
 }
 
 /* ===== Ambient floating particles ===== */
