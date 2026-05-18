@@ -2,6 +2,12 @@
 import { useEffect, useRef } from 'react';
 import { geoOrthographic, geoPath, geoGraticule10 } from 'd3-geo';
 import * as topojson from 'topojson-client';
+import {
+  buildRibbonPath,
+  RIBBON_SHAPES,
+  RIBBON_PERIOD_MS,
+  RIBBON_ROTATION_PERIOD_MS,
+} from '@/lib/ribbon-shapes';
 
 interface TopoCountries {
   type: 'Topology';
@@ -32,7 +38,6 @@ export default function GlobeLoader() {
     const front = frontRef.current;
     if (!back || !disc || !front) return;
 
-    // Clear any previous render
     back.innerHTML = '';
     disc.innerHTML = '';
     front.innerHTML = '';
@@ -45,7 +50,7 @@ export default function GlobeLoader() {
       return n as SVGElement;
     }
 
-    // ===== Defs (on disc SVG) =====
+    // ===== Defs on disc SVG =====
     const defs = el('defs', {}, disc);
 
     const accentRad = el('radialGradient', { id: 'ebcAccentRad', cx: '40%', cy: '35%', r: '75%' }, defs);
@@ -60,11 +65,23 @@ export default function GlobeLoader() {
     el('stop', { offset: '0%', 'stop-color': '#fff', 'stop-opacity': '0.3' }, specGrad);
     el('stop', { offset: '70%', 'stop-color': '#fff', 'stop-opacity': '0' }, specGrad);
 
+    // ===== Defs on FRONT SVG (for ribbon gradient — must be in same SVG as the paths) =====
+    const frontDefs = el('defs', {}, front);
+    const accentLin = el(
+      'linearGradient',
+      { id: 'ebcAccentLin', x1: '0%', y1: '0%', x2: '100%', y2: '100%' },
+      frontDefs
+    );
+    el('stop', { offset: '0%', 'stop-color': 'var(--color-accent-2)' }, accentLin);
+    el('stop', { offset: '25%', 'stop-color': 'var(--color-accent)' }, accentLin);
+    el('stop', { offset: '50%', 'stop-color': 'var(--color-surface)' }, accentLin);
+    el('stop', { offset: '75%', 'stop-color': 'var(--color-accent)' }, accentLin);
+    el('stop', { offset: '100%', 'stop-color': 'var(--color-accent-2)' }, accentLin);
+
     // ===== Disc + globe content =====
     const discGroup = el('g', { 'clip-path': 'url(#ebcClipDisc)' }, disc);
     el('circle', { cx: 0, cy: 0, r: R_DISC, fill: 'var(--color-surface)', 'fill-opacity': '0.35' }, discGroup);
 
-    // Globe sphere
     const globeG = el('g', {}, discGroup);
     el('circle', { cx: 0, cy: 0, r: R_GLOBE, fill: 'var(--color-bg)', 'fill-opacity': '0.55' }, globeG);
     el('circle', {
@@ -127,6 +144,27 @@ export default function GlobeLoader() {
       'stroke-opacity': '0.5',
     }, bezelG);
 
+    // ===== Morphing ribbon (gold metallic band morphing through 6 closed shapes) =====
+    const ribbonG = el('g', { id: 'ebcRibbonG' }, front);
+    const ribbonMain = el('path', {
+      d: '',
+      fill: 'none',
+      stroke: 'url(#ebcAccentLin)',
+      'stroke-width': '9',
+      'stroke-linejoin': 'round',
+      'stroke-linecap': 'round',
+    }, ribbonG);
+    const ribbonHi = el('path', {
+      d: '',
+      fill: 'none',
+      stroke: 'var(--color-surface)',
+      'stroke-width': '2.2',
+      'stroke-opacity': '0.55',
+      'stroke-linejoin': 'round',
+      'stroke-linecap': 'round',
+      transform: 'translate(-0.8 -1.2)',
+    }, ribbonG);
+
     // ===== Orbit ellipses (back + front) =====
     const orbits = [
       { rx: 96, ry: 22, tilt: -18, dash: '5 8', width: 0.9, opacity: 0.5, speed: 1.0 },
@@ -184,7 +222,8 @@ export default function GlobeLoader() {
 
     function frame(now: number) {
       if (cancelled) return;
-      const dt = (now - start) % ROT;
+      const t = now - start;
+      const dt = t % ROT;
       const lambda = (dt / ROT) * 360 - 180;
       projection.rotate([lambda, -18, 0]);
 
@@ -198,13 +237,23 @@ export default function GlobeLoader() {
         og.node.setAttribute('transform', `rotate(${og.speed > 0 ? -18 + angle : -18 + angle})`);
       });
 
+      // Morphing ribbon: 6-shape interpolation + slow rotation
+      const cycleMs = RIBBON_PERIOD_MS * RIBBON_SHAPES.length;
+      const tNorm = (t % cycleMs) / cycleMs;
+      const rp = buildRibbonPath(tNorm, 1);
+      ribbonMain.setAttribute('d', rp);
+      ribbonHi.setAttribute('d', rp);
+      ribbonG.setAttribute(
+        'transform',
+        `rotate(${((t / RIBBON_ROTATION_PERIOD_MS) * 360).toFixed(2)})`
+      );
+
       if (!reduced) {
         rafId = requestAnimationFrame(frame);
       }
     }
 
     if (reduced) {
-      // single static frame
       frame(start);
     } else {
       rafId = requestAnimationFrame(frame);
