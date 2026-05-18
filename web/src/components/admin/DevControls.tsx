@@ -30,6 +30,7 @@ const ROTATE_INTERVALS = [
 
 const COOKIE_FONT = 'ebc_font';
 const COOKIE_RADIUS = 'ebc_radius';
+const COOKIE_GLOBE = 'ebc_globe';
 
 function setCookie(key: string, value: string, days = 365) {
   document.cookie = `${key}=${encodeURIComponent(value)}; path=/; max-age=${days * 86400}; samesite=lax`;
@@ -54,7 +55,12 @@ function applyTokens(tokens: TokenSet) {
 
 function setPaletteCookie(id: string, tokens: { light: TokenSet; dark: TokenSet }) {
   document.cookie = `ebc_palette=${id}; path=/; max-age=${365 * 86400}; samesite=lax`;
-  localStorage.setItem('ebc_palette_data', JSON.stringify({ id, tokens }));
+  // localStorage write triggers 'storage' event in OTHER tabs of the same browser
+  // → public-tab PaletteSync listens + applies tokens live (no reload)
+  localStorage.setItem(
+    'ebc_palette_data',
+    JSON.stringify({ id, tokens, ts: Date.now() })
+  );
 }
 
 function loadFontStylesheet(font: { key: string; googleQuery: string }) {
@@ -73,6 +79,7 @@ export default function DevControls() {
   const [autoRotate, setAutoRotate] = useState(false);
   const [intervalMs, setIntervalMs] = useState<number>(30000);
   const [radiusPx, setRadiusPx] = useState<number>(24);
+  const [globeVmin, setGlobeVmin] = useState<number>(135);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
@@ -102,7 +109,27 @@ export default function DevControls() {
         applyRadius(v);
       }
     }
+    const g = readCookie(COOKIE_GLOBE);
+    if (g) {
+      const v = parseInt(g, 10);
+      if (!Number.isNaN(v)) {
+        setGlobeVmin(v);
+        applyGlobe(v);
+      }
+    }
   }, []);
+
+  function applyGlobe(v: number) {
+    document.documentElement.style.setProperty('--globe-size-vmin', String(v));
+  }
+
+  function pickGlobe(v: number) {
+    setGlobeVmin(v);
+    applyGlobe(v);
+    setCookie(COOKIE_GLOBE, String(v));
+    // Cross-tab sync: write to localStorage triggers storage event in other tabs
+    localStorage.setItem('ebc_globe_vmin', JSON.stringify({ v, ts: Date.now() }));
+  }
 
   function applyRadius(v: number) {
     const r = document.documentElement.style;
@@ -125,6 +152,8 @@ export default function DevControls() {
     setRadiusPx(v);
     applyRadius(v);
     setCookie(COOKIE_RADIUS, String(v));
+    // Cross-tab sync trigger
+    localStorage.setItem('ebc_radius_px', JSON.stringify({ v, ts: Date.now() }));
   }
 
   useEffect(() => {
@@ -194,6 +223,24 @@ export default function DevControls() {
           onChange={(e) => pickRadius(parseInt(e.target.value, 10))}
           className="w-full accent-[var(--color-accent)]"
         />
+      </div>
+
+      {/* Globe size slider */}
+      <div className="space-y-2">
+        <label className="block text-xs uppercase tracking-wider text-[var(--color-muted)]">
+          🌍 Háttér-földgömb mérete ({globeVmin}vmin)
+        </label>
+        <input
+          type="range"
+          min={60}
+          max={170}
+          value={globeVmin}
+          onChange={(e) => pickGlobe(parseInt(e.target.value, 10))}
+          className="w-full accent-[var(--color-accent)]"
+        />
+        <p className="text-xs text-[var(--color-muted)]">
+          A főoldal forgó földgömbjének zoom-szintje. 60% = pici, 135% = default, 170% = maximális.
+        </p>
       </div>
 
       {/* Auto-rotation */}

@@ -60,7 +60,7 @@ export default function AiChatWidget({ locale = DEFAULT_LOCALE }: Props) {
 
   return (
     <>
-      {/* Floating button */}
+      {/* Floating button — bottom-right; bottom-right corner-globe moved up so no collision */}
       <button
         onClick={() => setOpen((o) => !o)}
         aria-label={t('chat.title')}

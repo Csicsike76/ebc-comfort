@@ -45,6 +45,7 @@
   --radius-disclaimer: 32px;
   --radius-button: 999px;
   --shadow-card: 0 10px 40px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+  --globe-size-vmin: 135;
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-left: env(safe-area-inset-left, 0px);
@@ -204,9 +205,10 @@ img, video, svg { max-width: 100%; height: auto; display: block; }
 
 .bg-loader-inner {
   position: relative;
-  width: min(135vmin, 1400px);
-  height: min(135vmin, 1400px);
+  width: min(calc(var(--globe-size-vmin) * 1vmin), 1400px);
+  height: min(calc(var(--globe-size-vmin) * 1vmin), 1400px);
   opacity: 1;
+  transition: width 0.3s ease, height 0.3s ease;
 }
 
 .bg-loader-inner svg {
@@ -241,14 +243,16 @@ img, video, svg { max-width: 100%; height: auto; display: block; }
 .corner-globe.pos-tl { top: 84px; left: 12px; }
 .corner-globe.pos-tr { top: 84px; right: 12px; }
 .corner-globe.pos-bl { bottom: 12px; left: 12px; }
-.corner-globe.pos-br { bottom: 12px; right: 12px; }
+/* bottom-right globe moved up to ~260px so it clusters with top-right and
+   leaves bottom-right corner free for AI chat bubble */
+.corner-globe.pos-br { top: 260px; right: 12px; bottom: auto; }
 
 @media (max-width: 720px) {
   .corner-globe { width: 96px; height: 96px; }
   .corner-globe.pos-tl,
   .corner-globe.pos-tr { top: 68px; }
   .corner-globe.pos-bl { bottom: 12px; }
-  .corner-globe.pos-br { bottom: 66px; }
+  .corner-globe.pos-br { top: 180px; }
 }
 
 /* ===== Ambient floating particles ===== */

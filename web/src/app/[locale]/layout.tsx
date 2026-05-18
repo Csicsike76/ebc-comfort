@@ -10,6 +10,7 @@ import CornerGlobes from '@/components/CornerGlobes';
 import AmbientParticles from '@/components/AmbientParticles';
 import ReadingProgress from '@/components/ReadingProgress';
 import BackToTop from '@/components/BackToTop';
+import PaletteSync from '@/components/PaletteSync';
 
 const manrope = Manrope({
   variable: '--font-manrope',
@@ -64,6 +65,7 @@ export default async function LocaleLayout({ children, params }: Props) {
         <PaletteBootstrap />
       </head>
       <body className="min-h-full flex flex-col">
+        <PaletteSync />
         <GlobeLoader />
         <CornerGlobes />
         <AmbientParticles count={14} />
