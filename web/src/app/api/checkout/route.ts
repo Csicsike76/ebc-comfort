@@ -3,6 +3,7 @@ import { getSupabaseServerClient } from '@/lib/supabase/server';
 import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import { getStripe, isStripeConfigured } from '@/lib/stripe';
 import { isValidLocale } from '@/lib/i18n/config';
+import { sendOrderConfirmation } from '@/lib/email/send';
 
 interface CheckoutItem {
   product_id: string;
@@ -159,6 +160,27 @@ export async function POST(req: Request) {
       { status: 500 }
     );
   }
+
+  // Order-confirmation email (best-effort, non-blocking on failure)
+  await sendOrderConfirmation({
+    order_number: orderRow.order_number,
+    customer_name: shipping_address.name,
+    customer_email: shipping_address.email,
+    customer_user_id: user?.id ?? null,
+    total_cents: totalCents,
+    currency,
+    items: lineItems.map((l) => ({
+      name: l.name,
+      quantity: l.quantity,
+      line_total_cents: l.line_total_cents,
+    })),
+    shipping_address: {
+      street: shipping_address.street,
+      city: shipping_address.city,
+      postcode: shipping_address.postcode,
+      country: shipping_address.country,
+    },
+  }).catch(() => undefined);
 
   if (!isStripeConfigured()) {
     return NextResponse.json({

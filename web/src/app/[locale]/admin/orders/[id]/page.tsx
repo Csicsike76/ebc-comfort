@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { requireAdmin, formatMoneyCents, formatDateTime } from '@/lib/admin/guard';
+import { sendShippingUpdate } from '@/lib/email/send';
 
 interface Props {
   params: Promise<{ locale: string; id: string }>;
@@ -82,6 +83,36 @@ export default async function AdminOrderDetail({ params }: Props) {
     if (status === 'paid' && !order.paid_at) patch.paid_at = new Date().toISOString();
     const { error } = await s.from('orders').update(patch).eq('id', oid);
     if (error) throw new Error(error.message);
+
+    // Fire shipping-update email when transitioning to 'shipped'
+    if (status === 'shipped' && order.status !== 'shipped') {
+      const addr = order.shipping_address as { name?: string; street?: string; city?: string; postcode?: string; country?: string };
+      const customerEmail = order.profiles?.email ?? '';
+      if (customerEmail) {
+        await sendShippingUpdate({
+          order_number: order.order_number,
+          customer_name: addr?.name ?? order.profiles?.full_name ?? 'Vásárló',
+          customer_email: customerEmail,
+          customer_user_id: order.user_id,
+          total_cents: order.total_cents,
+          currency: order.currency,
+          items: order.order_items.map((it) => ({
+            name: it.products?.sku ?? 'EBC Comfort',
+            quantity: it.quantity,
+            line_total_cents: it.line_total_cents,
+          })),
+          shipping_address: {
+            street: addr?.street ?? '',
+            city: addr?.city ?? '',
+            postcode: addr?.postcode ?? '',
+            country: addr?.country ?? '',
+          },
+          tracking_number,
+          tracking_url,
+        }).catch(() => undefined);
+      }
+    }
+
     revalidatePath(`/${lp}/admin/orders/${oid}`);
   }
 

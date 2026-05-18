@@ -1,6 +1,7 @@
 import { notFound, redirect } from 'next/navigation';
 import { isValidLocale, Locale } from '@/lib/i18n/config';
 import { getSupabaseServerClient } from '@/lib/supabase/server';
+import { sendSupportReceived } from '@/lib/email/send';
 import PublicShell from '@/components/PublicShell';
 
 interface Props {
@@ -37,6 +38,15 @@ export default async function SupportPage({ params, searchParams }: Props) {
       status: 'pending',
     });
     if (error) throw new Error(error.message);
+
+    if (email) {
+      await sendSupportReceived({
+        email,
+        full_name,
+        reason,
+        user_id: user?.id ?? null,
+      }).catch(() => undefined);
+    }
     redirect(`/${lp}/tamogatas?done=request`);
   }
 

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { requireAdmin, formatDateTime } from '@/lib/admin/guard';
 import { SUPPORTED_LOCALES } from '@/lib/i18n/config';
 import ProductForm from '@/components/admin/ProductForm';
+import ReindexButton from '@/components/admin/ReindexButton';
 import { revalidatePath } from 'next/cache';
 
 interface Props {
@@ -151,7 +152,18 @@ export default async function EditProduct({ params }: Props) {
                     name="long_description"
                     defaultValue={tr?.long_description ?? ''}
                   />
-                  <div className="flex justify-end">
+                  <div className="flex justify-between items-center flex-wrap gap-2">
+                    {tr ? (
+                      <ReindexButton
+                        source_type="product"
+                        source_id={id}
+                        locale={loc}
+                        content={`${tr.name}\n\n${tr.short_description ?? ''}\n\n${tr.long_description ?? ''}`}
+                        metadata={{ sku: product.sku, name: tr.name }}
+                      />
+                    ) : (
+                      <span />
+                    )}
                     <button
                       type="submit"
                       className="px-4 py-1.5 rounded-full bg-[var(--color-accent)] text-white text-sm"

@@ -3,6 +3,7 @@ import { notFound, redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { requireAdmin, formatDateTime } from '@/lib/admin/guard';
 import { SUPPORTED_LOCALES } from '@/lib/i18n/config';
+import ReindexButton from '@/components/admin/ReindexButton';
 
 interface Props {
   params: Promise<{ locale: string; id: string }>;
@@ -216,7 +217,18 @@ export default async function EditArticle({ params }: Props) {
                       defaultValue={tr?.meta_description ?? ''}
                     />
                   </div>
-                  <div className="flex justify-end">
+                  <div className="flex justify-between items-center flex-wrap gap-2">
+                    {tr ? (
+                      <ReindexButton
+                        source_type="article"
+                        source_id={id}
+                        locale={loc}
+                        content={`${tr.title}\n\n${tr.excerpt ?? ''}\n\n${tr.body_markdown}`}
+                        metadata={{ slug: article.slug, title: tr.title }}
+                      />
+                    ) : (
+                      <span />
+                    )}
                     <button
                       type="submit"
                       className="px-4 py-1.5 rounded-full bg-[var(--color-accent)] text-white text-sm"
