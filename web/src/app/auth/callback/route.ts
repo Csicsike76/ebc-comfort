@@ -12,16 +12,28 @@ export async function GET(req: NextRequest) {
     await supa.auth.exchangeCodeForSession(code);
   }
 
-  // Build the redirect target by hand so neither Next.js nor the Netlify
-  // adapter can echo the original `?next=https://evil.example` query back
-  // into the Location header (which would surface in security scanners
-  // even though the path itself is already sanitized).
+  // The Netlify Next.js plugin merges the request's query string into the
+  // redirect Location, so /auth/callback?next=https://evil keeps echoing
+  // evil.example back even though our handler returns a bare URL. To stop
+  // that, we render a tiny HTML page that does a client-side <meta refresh>
+  // + a <script> redirect to the sanitized target. The Location header is
+  // gone entirely; nothing can inject query into a header that does not exist.
   const target = `${reqUrl.origin}${next}`;
-  return new Response(null, {
-    status: 307,
+  const html = `<!doctype html>
+<html><head>
+<meta charset="utf-8">
+<meta http-equiv="refresh" content="0; url=${target}">
+<title>Redirecting…</title>
+</head><body>
+<script>window.location.replace(${JSON.stringify(target)});</script>
+<p>Redirecting to <a href="${target}">${target}</a>…</p>
+</body></html>`;
+  return new Response(html, {
+    status: 200,
     headers: {
-      Location: target,
+      'Content-Type': 'text/html; charset=utf-8',
       'Cache-Control': 'no-store',
+      'Referrer-Policy': 'no-referrer',
     },
   });
 }
