@@ -1,0 +1,115 @@
+{
+  "$schema": "color-theme-tokens",
+  "version": 2,
+  "description": "15 színpaletta a 2025-2026 valódi színtrendek és ismert design rendszerek alapján. Minden palettának van forrása (source). Két mód (light, dark), 7 token: bg, surface, text, muted, accent, accent2, border.",
+  "tokenRoles": {
+    "bg": "Oldal háttér",
+    "surface": "Kártyák, panelek háttere",
+    "text": "Elsődleges szöveg",
+    "muted": "Másodlagos / leíró szöveg",
+    "accent": "Elsődleges hangsúlyszín (gomb, link)",
+    "accent2": "Másodlagos hangsúly (hover, mély variáns)",
+    "border": "Vonalak, elválasztók"
+  },
+  "sources": {
+    "pantone": "Pantone Color of the Year (2025: Mocha Mousse, 2026: Cloud Dancer)",
+    "ppg": "PPG Color of the Year 2026: Warm Mahogany",
+    "wgsn": "WGSN/Coloro forecast — Digital Lavender",
+    "vistaprint": "Vistaprint 2026 design trends list",
+    "kontra": "Kontra 2026 web design trends",
+    "radix": "Radix UI Colors — radix-ui.com/colors",
+    "vercel": "Vercel/Linear-style developer mono palette (zinc scale)"
+  },
+  "palettes": [
+    {
+      "id": "cloud-dancer", "name": "Cloud Dancer", "family": "trend-official",
+      "source": "Pantone CoTY 2026", "font": "Instrument Serif",
+      "light": { "bg":"#F0EEE9","surface":"#FFFFFF","text":"#1A1814","muted":"#6B6358","accent":"#8B7355","accent2":"#5C4E3E","border":"#DCD7CC" },
+      "dark":  { "bg":"#15130F","surface":"#1F1C17","text":"#F0EEE9","muted":"#9A9285","accent":"#C9B79A","accent2":"#E6D6BB","border":"#2A2620" }
+    },
+    {
+      "id": "warm-mahogany", "name": "Warm Mahogany", "family": "trend-official",
+      "source": "PPG CoTY 2026", "font": "Fraunces",
+      "light": { "bg":"#FAF4F1","surface":"#FFFFFF","text":"#2D1410","muted":"#7A5650","accent":"#7A3528","accent2":"#4F1E14","border":"#EFD9D2" },
+      "dark":  { "bg":"#1A0B08","surface":"#26120D","text":"#F5E0D8","muted":"#B58A80","accent":"#C25A47","accent2":"#E48975","border":"#3A1B14" }
+    },
+    {
+      "id": "mocha-mousse", "name": "Mocha Mousse", "family": "trend-official",
+      "source": "Pantone CoTY 2025 · #A47864", "font": "DM Sans",
+      "light": { "bg":"#F7F1EB","surface":"#FFFFFF","text":"#2A1D16","muted":"#7A6757","accent":"#A47864","accent2":"#735041","border":"#E6D9CB" },
+      "dark":  { "bg":"#171210","surface":"#231A15","text":"#EFE2D6","muted":"#A89283","accent":"#C7997F","accent2":"#DDB89E","border":"#2E241F" }
+    },
+    {
+      "id": "digital-lavender", "name": "Digital Lavender", "family": "trend-official",
+      "source": "WGSN forecast · #E6E6FA", "font": "Manrope",
+      "light": { "bg":"#F4F1FB","surface":"#FFFFFF","text":"#1F1735","muted":"#6E6388","accent":"#8B7BD8","accent2":"#5E4FB0","border":"#E6E0F4" },
+      "dark":  { "bg":"#0E0A1C","surface":"#19132E","text":"#EDE7FB","muted":"#9F94BE","accent":"#B5A4F0","accent2":"#D4C8FF","border":"#241C42" }
+    },
+    {
+      "id": "deep-teal", "name": "Deep Teal × Electric", "family": "trend-stylistic",
+      "source": "Kontra 2026 trend list", "font": "Space Grotesk",
+      "light": { "bg":"#F0F7F7","surface":"#FFFFFF","text":"#062528","muted":"#4A6D70","accent":"#0F766E","accent2":"#064E48","border":"#CFE3E2" },
+      "dark":  { "bg":"#04161A","surface":"#08252A","text":"#D6F2EE","muted":"#6FA39E","accent":"#22D3C5","accent2":"#5DEFD6","border":"#0E3338" }
+    },
+    {
+      "id": "mermaidcore", "name": "Mermaidcore", "family": "trend-stylistic",
+      "source": "Vistaprint 2026 trends · teal→purple", "font": "Fraunces",
+      "light": { "bg":"#F0F8F8","surface":"#FFFFFF","text":"#1A1140","muted":"#5E5780","accent":"#06B6D4","accent2":"#7C3AED","border":"#D6E8EC" },
+      "dark":  { "bg":"#0A0820","surface":"#13123A","text":"#E7F5FB","muted":"#8F8FC7","accent":"#67E8F9","accent2":"#A78BFA","border":"#1F1D4A" }
+    },
+    {
+      "id": "walnut-retro", "name": "Walnut Retro", "family": "trend-stylistic",
+      "source": "Vistaprint 2026 trends · 70s browns", "font": "IBM Plex Serif",
+      "light": { "bg":"#F4EFE6","surface":"#FBF7F0","text":"#2A1A0E","muted":"#76624C","accent":"#8B4513","accent2":"#5C2C0A","border":"#DFD2BD" },
+      "dark":  { "bg":"#15100A","surface":"#1F1810","text":"#EFE4D2","muted":"#A48F73","accent":"#C8814D","accent2":"#E0A06D","border":"#2C2218" }
+    },
+    {
+      "id": "sunwashed", "name": "Sunwashed", "family": "trend-stylistic",
+      "source": "Vistaprint 2026 trends · faded coastal", "font": "Cormorant Garamond",
+      "light": { "bg":"#FCF5EE","surface":"#FFFFFF","text":"#3D1F14","muted":"#9A7866","accent":"#D49074","accent2":"#A65E45","border":"#F0DDC9" },
+      "dark":  { "bg":"#1B0F09","surface":"#28180F","text":"#FAE3D2","muted":"#C29A82","accent":"#F0AE89","accent2":"#FBCEB1","border":"#3A2418" }
+    },
+    {
+      "id": "clubroom", "name": "Clubroom Black & Gold", "family": "trend-stylistic",
+      "source": "Vistaprint 2026 trends · clubroom contrast", "font": "Bodoni Moda",
+      "light": { "bg":"#F8F6F0","surface":"#FFFFFF","text":"#0E0C08","muted":"#6B6358","accent":"#B8862C","accent2":"#7A5816","border":"#E8E2D2" },
+      "dark":  { "bg":"#0A0908","surface":"#13110D","text":"#F5F1E1","muted":"#9A8E73","accent":"#D9A646","accent2":"#F2C766","border":"#1F1B14" }
+    },
+    {
+      "id": "banana-pop", "name": "Banana Pop", "family": "trend-stylistic",
+      "source": "Vistaprint 2026 trends · dopamine yellow", "font": "Space Grotesk",
+      "light": { "bg":"#FFFDF0","surface":"#FFFFFF","text":"#1A1604","muted":"#7A6F38","accent":"#EAB308","accent2":"#A16207","border":"#F4EBB7" },
+      "dark":  { "bg":"#0F0E04","surface":"#1A1808","text":"#FFFBD6","muted":"#B5A86A","accent":"#FFDD44","accent2":"#FFEC8B","border":"#2A2510" }
+    },
+    {
+      "id": "hot-pink", "name": "Hot Pink Mono", "family": "trend-stylistic",
+      "source": "2026 monochrome pop · #FF69B4", "font": "Bodoni Moda",
+      "light": { "bg":"#FFF5F9","surface":"#FFFFFF","text":"#2A0A1A","muted":"#8A4A66","accent":"#EC4899","accent2":"#BE185D","border":"#F8D7E6" },
+      "dark":  { "bg":"#0F0610","surface":"#1A0A18","text":"#FCE0EE","muted":"#C28FA8","accent":"#FF69B4","accent2":"#FFA4D0","border":"#2D1325" }
+    },
+    {
+      "id": "vercel-mono", "name": "Vercel Mono", "family": "design-system",
+      "source": "Vercel/Linear-style developer dark mode (zinc scale)", "font": "Inter",
+      "light": { "bg":"#FFFFFF","surface":"#FAFAFA","text":"#09090B","muted":"#71717A","accent":"#18181B","accent2":"#3F3F46","border":"#E4E4E7" },
+      "dark":  { "bg":"#09090B","surface":"#18181B","text":"#FAFAFA","muted":"#A1A1AA","accent":"#FAFAFA","accent2":"#D4D4D8","border":"#27272A" }
+    },
+    {
+      "id": "iris", "name": "Iris", "family": "design-system",
+      "source": "Radix UI · Iris scale", "font": "Inter",
+      "light": { "bg":"#FDFDFF","surface":"#F8F8FF","text":"#1F1B4D","muted":"#6F6FB0","accent":"#5B5BD6","accent2":"#3D3DA8","border":"#DADCF6" },
+      "dark":  { "bg":"#13131E","surface":"#171728","text":"#E1E0FB","muted":"#9B9EF0","accent":"#6E6ADE","accent2":"#9B9EF0","border":"#262A65" }
+    },
+    {
+      "id": "jade", "name": "Jade", "family": "design-system",
+      "source": "Radix UI · Jade scale", "font": "DM Sans",
+      "light": { "bg":"#FBFEFD","surface":"#F2FAF6","text":"#1D3B31","muted":"#5F7F70","accent":"#29A383","accent2":"#177661","border":"#D6EBE0" },
+      "dark":  { "bg":"#0D1512","surface":"#121C18","text":"#D6F5E5","muted":"#84B59E","accent":"#27B08B","accent2":"#65C9A5","border":"#1B2D26" }
+    },
+    {
+      "id": "tomato", "name": "Tomato", "family": "design-system",
+      "source": "Radix UI · Tomato scale", "font": "Inter",
+      "light": { "bg":"#FFFCFC","surface":"#FFF8F7","text":"#5C271F","muted":"#A2675F","accent":"#E54D2E","accent2":"#C53310","border":"#F9D2C8" },
+      "dark":  { "bg":"#1D1412","surface":"#2A1812","text":"#FBD3CB","muted":"#D5715B","accent":"#E54D2E","accent2":"#F19273","border":"#3B1F15" }
+    }
+  ]
+}

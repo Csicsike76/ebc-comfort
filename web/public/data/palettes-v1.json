@@ -1,0 +1,99 @@
+{
+  "$schema": "color-theme-tokens",
+  "description": "14 színpaletta, mindegyik világos (light) és sötét (dark) móddal. Minden mód 7 tokent definiál: bg, surface, text, muted, accent, accent2, border. Plusz minden palettának van ajánlott font családja.",
+  "tokenRoles": {
+    "bg": "Oldal háttér",
+    "surface": "Kártyák, panelek háttere",
+    "text": "Elsődleges szöveg",
+    "muted": "Másodlagos / leíró szöveg",
+    "accent": "Elsődleges hangsúlyszín (gomb, link)",
+    "accent2": "Másodlagos hangsúly (hover, mély variáns)",
+    "border": "Vonalak, elválasztók"
+  },
+  "palettes": [
+    {
+      "id": "turquoise", "name": "Türkiz Öböl", "family": "cool",
+      "font": "Inter",
+      "light": { "bg": "#F2FBFA", "surface": "#FFFFFF", "text": "#0B3B3A", "muted": "#5A7B7A", "accent": "#14B8A6", "accent2": "#0D9488", "border": "#D4EEEB" },
+      "dark":  { "bg": "#0A1F1E", "surface": "#0F2D2B", "text": "#E6FFFB", "muted": "#7FB5AE", "accent": "#2DD4BF", "accent2": "#5EEAD4", "border": "#1B3D3A" }
+    },
+    {
+      "id": "midnight", "name": "Éjféli Kék", "family": "cool",
+      "font": "Instrument Serif",
+      "light": { "bg": "#F7F8FC", "surface": "#FFFFFF", "text": "#0B1437", "muted": "#5B6588", "accent": "#3B5BDB", "accent2": "#1E3A8A", "border": "#E2E6F3" },
+      "dark":  { "bg": "#080C1F", "surface": "#11173A", "text": "#EAF0FF", "muted": "#8A95BD", "accent": "#6E8BFF", "accent2": "#A4B7FF", "border": "#1C2350" }
+    },
+    {
+      "id": "ocean", "name": "Óceán Cián", "family": "cool",
+      "font": "JetBrains Mono",
+      "light": { "bg": "#EFF8FC", "surface": "#FFFFFF", "text": "#062338", "muted": "#557289", "accent": "#0EA5E9", "accent2": "#0369A1", "border": "#CDE5F1" },
+      "dark":  { "bg": "#04121C", "surface": "#0A1E2D", "text": "#DDF1FB", "muted": "#7AA1BB", "accent": "#38BDF8", "accent2": "#7DD3FC", "border": "#142B40" }
+    },
+    {
+      "id": "mint", "name": "Menta", "family": "cool",
+      "font": "Space Grotesk",
+      "light": { "bg": "#EEFBF3", "surface": "#FFFFFF", "text": "#0A2C1B", "muted": "#5A7A66", "accent": "#10B981", "accent2": "#047857", "border": "#CCEBD9" },
+      "dark":  { "bg": "#06150E", "surface": "#0C2118", "text": "#DCF5E5", "muted": "#7BAA92", "accent": "#34D399", "accent2": "#6EE7B7", "border": "#143028" }
+    },
+    {
+      "id": "sage", "name": "Zsálya", "family": "earth",
+      "font": "DM Sans",
+      "light": { "bg": "#F4F6F0", "surface": "#FBFCF8", "text": "#1F2A1A", "muted": "#5F6B53", "accent": "#6B8E5A", "accent2": "#3F5A36", "border": "#DDE3D0" },
+      "dark":  { "bg": "#141812", "surface": "#1C211A", "text": "#EAEFE0", "muted": "#8B9583", "accent": "#A8C58E", "accent2": "#C8DBB1", "border": "#2A3026" }
+    },
+    {
+      "id": "forest", "name": "Mély Erdő", "family": "earth",
+      "font": "IBM Plex Serif",
+      "light": { "bg": "#F1F4F0", "surface": "#FFFFFF", "text": "#0E2418", "muted": "#4E6655", "accent": "#1F6F4A", "accent2": "#0F4E2F", "border": "#D3DCD2" },
+      "dark":  { "bg": "#08140E", "surface": "#0E1F17", "text": "#DDEEDF", "muted": "#7B988A", "accent": "#42B07A", "accent2": "#7BD3A6", "border": "#16291F" }
+    },
+    {
+      "id": "sunset", "name": "Naplemente", "family": "warm",
+      "font": "Fraunces",
+      "light": { "bg": "#FFF6EE", "surface": "#FFFFFF", "text": "#2E1505", "muted": "#7A5642", "accent": "#E25C2C", "accent2": "#B8410E", "border": "#F7DCC6" },
+      "dark":  { "bg": "#1A0B05", "surface": "#26120A", "text": "#FFE9D6", "muted": "#B5876B", "accent": "#FF7A45", "accent2": "#FFB088", "border": "#3A1B0E" }
+    },
+    {
+      "id": "amber", "name": "Borostyán", "family": "warm",
+      "font": "Recoleta",
+      "light": { "bg": "#FEF8E7", "surface": "#FFFFFF", "text": "#2A1D02", "muted": "#7D6428", "accent": "#D97706", "accent2": "#92400E", "border": "#F2E3B0" },
+      "dark":  { "bg": "#181203", "surface": "#241B07", "text": "#FFF1C8", "muted": "#B89968", "accent": "#FBBF24", "accent2": "#FCD34D", "border": "#332512" }
+    },
+    {
+      "id": "rosegold", "name": "Rózsaarany", "family": "warm",
+      "font": "Cormorant Garamond",
+      "light": { "bg": "#FBF4F1", "surface": "#FFFFFF", "text": "#3B1A1F", "muted": "#8A6168", "accent": "#C97B6A", "accent2": "#9C4F44", "border": "#F0D9D2" },
+      "dark":  { "bg": "#1A0E10", "surface": "#241518", "text": "#FBE5E2", "muted": "#B98C8C", "accent": "#E4A597", "accent2": "#F4CABE", "border": "#34201E" }
+    },
+    {
+      "id": "peach", "name": "Barack Krém", "family": "warm",
+      "font": "PP Editorial New",
+      "light": { "bg": "#FCF1E8", "surface": "#FFFFFF", "text": "#3A1B0C", "muted": "#8A6450", "accent": "#F08A5D", "accent2": "#C7572A", "border": "#F4D9C6" },
+      "dark":  { "bg": "#1B0E07", "surface": "#28160C", "text": "#FCE4D2", "muted": "#BD9078", "accent": "#FFAE85", "accent2": "#FFCEB1", "border": "#3A1E12" }
+    },
+    {
+      "id": "crimson", "name": "Kármin", "family": "warm",
+      "font": "Bodoni Moda",
+      "light": { "bg": "#FBF2F2", "surface": "#FFFFFF", "text": "#2E0A0E", "muted": "#7E4A50", "accent": "#C73E5A", "accent2": "#8B1E36", "border": "#F2D6D7" },
+      "dark":  { "bg": "#170608", "surface": "#22090D", "text": "#FCE2E4", "muted": "#B8848A", "accent": "#F76A85", "accent2": "#FFA0B0", "border": "#311116" }
+    },
+    {
+      "id": "lavender", "name": "Levendula", "family": "moody",
+      "font": "Manrope",
+      "light": { "bg": "#F6F2FC", "surface": "#FFFFFF", "text": "#1F0F3D", "muted": "#6E5B8E", "accent": "#7C5CFF", "accent2": "#5A39D9", "border": "#E5DCF5" },
+      "dark":  { "bg": "#0E0820", "surface": "#1A1235", "text": "#EFE7FF", "muted": "#9A8BC2", "accent": "#B59CFF", "accent2": "#D7C8FF", "border": "#251B45" }
+    },
+    {
+      "id": "plum", "name": "Szilva", "family": "moody",
+      "font": "Tenor Sans",
+      "light": { "bg": "#F8F1F6", "surface": "#FFFFFF", "text": "#2A0E26", "muted": "#7A5170", "accent": "#8B2A6A", "accent2": "#5E1748", "border": "#EBD7E5" },
+      "dark":  { "bg": "#15081A", "surface": "#20102A", "text": "#F4E1F0", "muted": "#A87DA0", "accent": "#D75B9F", "accent2": "#EE8BBE", "border": "#2D1A38" }
+    },
+    {
+      "id": "slate", "name": "Pala Mono", "family": "neutral",
+      "font": "Inter",
+      "light": { "bg": "#F5F6F7", "surface": "#FFFFFF", "text": "#0F1419", "muted": "#5C6770", "accent": "#1F2937", "accent2": "#374151", "border": "#E0E3E6" },
+      "dark":  { "bg": "#0B0D10", "surface": "#15181C", "text": "#ECEFF2", "muted": "#8B939B", "accent": "#E5E7EB", "accent2": "#9CA3AF", "border": "#1F2329" }
+    }
+  ]
+}
