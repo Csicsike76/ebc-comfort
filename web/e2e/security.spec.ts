@@ -1,31 +1,45 @@
 import { test, expect } from '@playwright/test';
 
+/**
+ * The /auth/callback route was changed from a 302 Location-header redirect
+ * to a 200 OK HTML page with <meta refresh> + <script>window.location.replace(...)>.
+ * This was necessary because the Netlify Next.js plugin echoes the request
+ * query string into outgoing Location headers, leaking attacker-controlled
+ * values even after server-side path sanitization. The HTML body is the
+ * authoritative source of truth for what the redirect target is.
+ */
+
 test.describe('Security — open-redirect mitigation', () => {
   test('auth/callback rejects protocol-relative redirect', async ({ request }) => {
-    const res = await request.get('/auth/callback?next=//evil.example/x', {
-      maxRedirects: 0,
-    });
-    expect([301, 302, 307, 308]).toContain(res.status());
-    const location = res.headers()['location'];
-    expect(location).toBeDefined();
-    expect(location).not.toMatch(/^https?:\/\/evil\.example/);
-    expect(location).toMatch(/\/hu\/admin$|\/hu\/admin\?/);
+    const res = await request.get('/auth/callback?next=//evil.example/x');
+    expect(res.status()).toBe(200);
+    const body = await res.text();
+    expect(body).not.toContain('evil.example');
+    expect(body).toMatch(/\/hu\/admin/);
   });
 
   test('auth/callback rejects absolute scheme redirect', async ({ request }) => {
-    const res = await request.get('/auth/callback?next=https://evil.example', {
-      maxRedirects: 0,
-    });
-    const location = res.headers()['location'];
-    expect(location).not.toMatch(/evil\.example/);
+    const res = await request.get('/auth/callback?next=https://evil.example');
+    expect(res.status()).toBe(200);
+    const body = await res.text();
+    expect(body).not.toContain('evil.example');
+    expect(body).toMatch(/\/hu\/admin/);
+  });
+
+  test('auth/callback rejects javascript: scheme', async ({ request }) => {
+    const res = await request.get('/auth/callback?next=javascript:alert(1)');
+    expect(res.status()).toBe(200);
+    const body = await res.text();
+    expect(body).not.toContain('javascript:');
+    expect(body).toMatch(/\/hu\/admin/);
   });
 
   test('auth/callback accepts safe same-origin path', async ({ request }) => {
-    const res = await request.get('/auth/callback?next=/en/admin/orders', {
-      maxRedirects: 0,
-    });
-    const location = res.headers()['location'];
-    expect(location).toMatch(/\/en\/admin\/orders$/);
+    const res = await request.get('/auth/callback?next=/en/admin/orders');
+    expect(res.status()).toBe(200);
+    const body = await res.text();
+    expect(body).toContain('/en/admin/orders');
+    expect(body).not.toContain('evil');
   });
 });
 

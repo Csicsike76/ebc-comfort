@@ -3,8 +3,8 @@ import { test, expect } from '@playwright/test';
 test.describe('Cart flow — HU happy path', () => {
   test('product page loads with 24-month warranty and add-to-cart button', async ({ page }) => {
     await page.goto('/hu/termek');
-    await expect(page.locator('body')).toContainText(/24|hó|month/);
-    await expect(page.locator('text=EBC')).toBeVisible();
+    await expect(page.locator('body')).toContainText(/24 hó/);
+    await expect(page.getByRole('heading', { level: 1 })).toContainText('EBC');
   });
 
   test('empty cart page renders without crash', async ({ page }) => {
