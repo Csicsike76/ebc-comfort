@@ -87,7 +87,7 @@ export default async function Home({ params }: Props) {
               </p>
               <div className="mt-6 flex flex-wrap gap-3 justify-center">
                 <a
-                  href="#pricing"
+                  href={`/${locale}/termek`}
                   className="btn-cta-pulse inline-flex items-center justify-center px-7 py-3.5 rounded-full text-sm font-semibold bg-[var(--color-accent)] text-white hover:bg-[var(--color-accent-2)] transition-colors"
                 >
                   {t('home.hero.cta_primary')}
@@ -199,7 +199,7 @@ export default async function Home({ params }: Props) {
           heroSelector="#hero"
           text={`EBC Comfort · 100 €`}
           ctaLabel={t('home.hero.cta_primary')}
-          href="#pricing"
+          href={`/${locale}/termek`}
         />
       </div>
     </CartProvider>

@@ -3,12 +3,21 @@ import { useEffect, useRef } from 'react';
 
 interface Props {
   target: number;
+  from?: number;
   locale?: string;
   className?: string;
   suffix?: string;
+  durationMs?: number;
 }
 
-export default function Counter({ target, locale = 'hu-HU', className = '', suffix = '' }: Props) {
+export default function Counter({
+  target,
+  from = 0,
+  locale = 'hu-HU',
+  className = '',
+  suffix = '',
+  durationMs,
+}: Props) {
   const ref = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
@@ -20,13 +29,15 @@ export default function Counter({ target, locale = 'hu-HU', className = '', suff
       return;
     }
     const ease = (t: number) => 1 - Math.pow(1 - t, 3);
-    const dur = Math.min(1200, 400 + target / 20);
+    const span = target - from;
+    const dur = durationMs ?? Math.min(1800, 400 + Math.abs(span) * 2);
     let raf = 0;
     let started = 0;
     function tick(now: number) {
       if (!started) started = now;
       const t = Math.min(1, (now - started) / dur);
-      if (node) node.textContent = Math.round(target * ease(t)).toLocaleString(locale) + suffix;
+      const value = from + span * ease(t);
+      if (node) node.textContent = Math.round(value).toLocaleString(locale) + suffix;
       if (t < 1) raf = requestAnimationFrame(tick);
     }
     const obs = new IntersectionObserver(
@@ -45,11 +56,11 @@ export default function Counter({ target, locale = 'hu-HU', className = '', suff
       if (raf) cancelAnimationFrame(raf);
       obs.disconnect();
     };
-  }, [target, locale, suffix]);
+  }, [target, from, locale, suffix, durationMs]);
 
   return (
     <span ref={ref} className={`counter-num ${className}`}>
-      0{suffix}
+      {from.toLocaleString(locale)}{suffix}
     </span>
   );
 }
