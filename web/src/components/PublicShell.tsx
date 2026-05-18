@@ -5,6 +5,8 @@ import AiChatWidget from '@/components/AiChatWidget';
 import CartIndicator from '@/components/CartIndicator';
 import MarketingPixels from '@/components/MarketingPixels';
 import UtmTracker from '@/components/UtmTracker';
+import CookieConsent from '@/components/CookieConsent';
+import CookieSettingsLink from '@/components/CookieSettingsLink';
 import { CartProvider } from '@/lib/cart/CartContext';
 import { Locale } from '@/lib/i18n/config';
 import { getDict, tt } from '@/lib/i18n';
@@ -64,21 +66,21 @@ export default function PublicShell({ locale, children }: Props) {
               </p>
             </div>
             <div className="glass-card p-4 text-center">
-              <p className="text-xs text-[var(--color-muted)]">
-                © 2026 EBC Wellness · {locale.toUpperCase()} ·{' '}
-                <a href={`/${locale}/gyik`} className="hover:underline">
-                  GY.I.K.
-                </a>{' '}
-                ·{' '}
-                <a href={`/${locale}/rolunk`} className="hover:underline">
-                  {t('common.about')}
-                </a>
+              <p className="text-xs text-[var(--color-muted)] flex flex-wrap justify-center gap-x-3 gap-y-1">
+                <span>© 2026 EBC Wellness · {locale.toUpperCase()}</span>
+                <a href={`/${locale}/aszf`} className="hover:underline">ÁSZF</a>
+                <a href={`/${locale}/adatvedelem`} className="hover:underline">Adatvédelem</a>
+                <a href={`/${locale}/cookie-tajekoztato`} className="hover:underline">Cookie</a>
+                <a href={`/${locale}/gyik`} className="hover:underline">GY.I.K.</a>
+                <a href={`/${locale}/rolunk`} className="hover:underline">{t('common.about')}</a>
+                <CookieSettingsLink locale={locale} />
               </p>
             </div>
           </div>
         </footer>
 
         <AiChatWidget locale={locale} />
+        <CookieConsent locale={locale} />
       </div>
     </CartProvider>
   );

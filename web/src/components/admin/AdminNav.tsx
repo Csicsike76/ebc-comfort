@@ -21,6 +21,8 @@ const TABS = [
   { key: 'marketing', label: 'Marketing', href: '/marketing' },
   { key: 'users', label: 'Felhasználók', href: '/users' },
   { key: 'i18n', label: 'Fordítások', href: '/i18n' },
+  { key: 'legal-docs', label: 'Jogi', href: '/legal-docs' },
+  { key: 'compliance', label: 'Compliance', href: '/compliance' },
   { key: 'settings', label: 'Beállítások', href: '/settings' },
 ];
 

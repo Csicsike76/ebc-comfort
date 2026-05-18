@@ -1,21 +1,37 @@
+'use client';
+import { useEffect, useState } from 'react';
 import Script from 'next/script';
+import { readConsentFromCookie } from '@/lib/cookie-consent';
 
 /**
- * Marketing pixels — injected only when env vars are non-placeholder.
- * Renders to <head> via Next.js Script strategy.
+ * Marketing pixels — gated by:
+ *   1. env var configured (NEXT_PUBLIC_*_PIXEL_ID non-placeholder)
+ *   2. user consent (analytics for GA, marketing for Meta+TikTok+GoogleAds)
+ * Reads cookie on mount; until consent decision is made, NO pixel loads.
  */
 export default function MarketingPixels() {
   const meta = process.env.NEXT_PUBLIC_META_PIXEL_ID;
   const tiktok = process.env.NEXT_PUBLIC_TIKTOK_PIXEL_ID;
   const googleAds = process.env.NEXT_PUBLIC_GOOGLE_ADS_ID;
 
-  const metaActive = meta && !meta.includes('PLACEHOLDER');
-  const tiktokActive = tiktok && !tiktok.includes('PLACEHOLDER');
-  const googleAdsActive = googleAds && !googleAds.includes('PLACEHOLDER');
+  const metaConfigured = !!meta && !meta.includes('PLACEHOLDER');
+  const tiktokConfigured = !!tiktok && !tiktok.includes('PLACEHOLDER');
+  const googleAdsConfigured = !!googleAds && !googleAds.includes('PLACEHOLDER');
+
+  const [marketingOk, setMarketingOk] = useState(false);
+  const [analyticsOk, setAnalyticsOk] = useState(false);
+
+  useEffect(() => {
+    const consent = readConsentFromCookie();
+    if (consent) {
+      setMarketingOk(consent.marketing);
+      setAnalyticsOk(consent.analytics);
+    }
+  }, []);
 
   return (
     <>
-      {metaActive && (
+      {metaConfigured && marketingOk && (
         <Script
           id="meta-pixel"
           strategy="afterInteractive"
@@ -24,7 +40,7 @@ export default function MarketingPixels() {
           }}
         />
       )}
-      {tiktokActive && (
+      {tiktokConfigured && marketingOk && (
         <Script
           id="tiktok-pixel"
           strategy="afterInteractive"
@@ -33,7 +49,7 @@ export default function MarketingPixels() {
           }}
         />
       )}
-      {googleAdsActive && (
+      {googleAdsConfigured && (analyticsOk || marketingOk) && (
         <>
           <Script
             id="google-ads"

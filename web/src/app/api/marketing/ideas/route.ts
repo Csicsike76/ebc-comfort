@@ -89,9 +89,12 @@ Formátum (JSON tömb, JSON-on kívül semmi!):
   const admin = getSupabaseAdmin();
   if (admin) {
     await admin.from('audit_log').insert({
-      action: 'marketing_ideas_generated',
-      actor_user_id: user.id,
-      payload: { channel, count, ideas, raw_text: text.slice(0, 4000) },
+      user_id: user.id,
+      action: 'admin_action',
+      resource_type: 'marketing_ideas',
+      resource_id: null,
+      payload_after: { channel, count, ideas, raw_text: text.slice(0, 4000) },
+      reason: 'Marketing ideas generation via Claude Haiku',
     });
   }
 
