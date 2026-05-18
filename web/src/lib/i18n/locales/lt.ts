@@ -61,12 +61,12 @@ export const lt = {
       subline: 'Vienkartinis pirkimas · nemokamas pristatymas ES',
       cta: 'Užsisakyti dabar',
       includes: {
-        item: 'EBC Comfort šildomas pagalvėlė',
+        item: 'EBC Comfort šildoma pagalvėlė',
         accu: 'USB-C laidas + 8000 mAh baterija',
         silicone: '2 keičiami silikono įdėklai',
         packaging: 'Diskretiška pakuotė, nemokamas pristatymas',
         refund: '30 dienų pinigų grąžinimo garantija',
-        warranty: '1 metų gamintojo garantija',
+        warranty: '24 mėnesių ES vartotojų garantija',
       },
     },
     testimonials: {
@@ -107,7 +107,7 @@ export const lt = {
         },
         refund: {
           q: 'Kaip veikia 30 dienų garantija?',
-          a: 'Jei nesate patenkinti per 30 dienų, grąžinkite ir grąžinsime visą kainą. Grąžinimo išlaidas dengiame mes. Plius 1 metų gamintojo garantija gamykliniams defektams.',
+          a: 'Jei nesate patenkinti per 30 dienų, grąžinkite ir grąžinsime visą kainą. Grąžinimo išlaidas dengiame mes. Plius 24 mėnesių ES vartotojų garantija gamykliniams defektams (Direktyva 2019/771).',
         },
       },
     },

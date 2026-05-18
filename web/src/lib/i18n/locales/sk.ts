@@ -49,7 +49,7 @@ export const sk = {
     how_it_works: {
       title: 'Jednoduchšie, ako si myslíš.',
       steps: {
-        on: 'Zapnúť. Jeden stlačenie tlačidla.',
+        on: 'Zapnúť. Jedno stlačenie tlačidla.',
         choose: 'Vyber úroveň tepla — kedykoľvek zmeň.',
         wear: 'Nos diskrétne — pripevnený k spodnej bielizni.',
         charge: 'Nabíjaj USB-C káblom, plne nabité za ~3 hodiny.',
@@ -66,7 +66,7 @@ export const sk = {
         silicone: '2 vymeniteľné silikónové vložky',
         packaging: 'Diskrétne balenie, doprava zdarma',
         refund: '30-dňová záruka vrátenia peňazí',
-        warranty: '1-ročná záruka výrobcu',
+        warranty: '24-mesačná EU spotrebiteľská záruka',
       },
     },
     testimonials: {
@@ -107,7 +107,7 @@ export const sk = {
         },
         refund: {
           q: 'Ako funguje 30-dňová záruka?',
-          a: 'Ak nie ste spokojní do 30 dní, vráťte ho a vrátime vám plnú cenu. Náklady na vrátenie hradíme my. Plus 1 rok záruky výrobcu na výrobné chyby.',
+          a: 'Ak nie ste spokojní do 30 dní, vráťte ho a vrátime vám plnú cenu. Náklady na vrátenie hradíme my. Plus 24 mesiacov EU spotrebiteľskej záruky na výrobné chyby (smernica 2019/771).',
         },
       },
     },

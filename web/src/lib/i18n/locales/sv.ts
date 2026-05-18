@@ -66,7 +66,7 @@ export const sv = {
         silicone: '2 utbytbara silikon-inlägg',
         packaging: 'Diskret förpackning, fri frakt',
         refund: '30 dagars öppet köp',
-        warranty: '1 års tillverkargaranti',
+        warranty: '24 månaders EU-konsumentgaranti',
       },
     },
     testimonials: {
@@ -107,7 +107,7 @@ export const sv = {
         },
         refund: {
           q: 'Hur fungerar 30 dagars öppet köp?',
-          a: 'Om du inte är nöjd inom 30 dagar, skicka tillbaka och vi återbetalar hela beloppet. Vi står för returkostnaden. Plus 1 års tillverkargaranti för fabriksfel.',
+          a: 'Om du inte är nöjd inom 30 dagar, skicka tillbaka och vi återbetalar hela beloppet. Vi står för returkostnaden. Plus 24 månaders EU-konsumentgaranti för fabriksfel (direktiv 2019/771).',
         },
       },
     },

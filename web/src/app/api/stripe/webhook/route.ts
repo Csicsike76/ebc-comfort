@@ -43,6 +43,22 @@ export async function POST(req: Request) {
     );
   }
 
+  // Idempotency: short-circuit if event.id has already been processed.
+  // stripe_events table created in migration 0016 (PK = event.id).
+  const { error: insertErr } = await admin
+    .from('stripe_events')
+    .insert({ id: event.id, event_type: event.type });
+  if (insertErr) {
+    // Duplicate primary key → 23505 — Stripe retry, already processed.
+    if (insertErr.code === '23505') {
+      return NextResponse.json({ received: true, type: event.type, deduped: true });
+    }
+    return NextResponse.json(
+      { error: `Idempotency check failed: ${insertErr.message}` },
+      { status: 500 }
+    );
+  }
+
   try {
     switch (event.type) {
       case 'checkout.session.completed': {

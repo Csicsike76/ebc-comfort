@@ -66,7 +66,7 @@ export const cs = {
         silicone: '2 vyměnitelné silikonové vložky',
         packaging: 'Diskrétní balení, doprava zdarma',
         refund: '30denní záruka vrácení peněz',
-        warranty: '1letá záruka výrobce',
+        warranty: '24 měsíců EU spotřebitelské záruky',
       },
     },
     testimonials: {
@@ -107,7 +107,7 @@ export const cs = {
         },
         refund: {
           q: 'Jak funguje 30denní záruka?',
-          a: 'Pokud nejste spokojeni do 30 dnů, vraťte ho a vrátíme vám plnou cenu. Náklady na vrácení hradíme my. Plus 1 rok záruky výrobce na výrobní vady.',
+          a: 'Pokud nejste spokojeni do 30 dnů, vraťte ho a vrátíme vám plnou cenu. Náklady na vrácení hradíme my. Plus 24 měsíců EU spotřebitelské záruky na výrobní vady (směrnice 2019/771).',
         },
       },
     },

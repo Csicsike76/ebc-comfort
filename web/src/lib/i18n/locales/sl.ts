@@ -63,10 +63,10 @@ export const sl = {
       includes: {
         item: 'EBC Comfort grelna blazina',
         accu: 'USB-C kabel + baterija 8000 mAh',
-        silicone: '2 zamenljivi silikonski vložki',
+        silicone: '2 zamenljiva silikonska vložka',
         packaging: 'Diskretno pakiranje, brezplačna dostava',
         refund: '30-dnevna garancija vračila denarja',
-        warranty: '1 leto garancije proizvajalca',
+        warranty: '24 mesecev EU potrošniške garancije',
       },
     },
     testimonials: {
@@ -107,7 +107,7 @@ export const sl = {
         },
         refund: {
           q: 'Kako deluje 30-dnevna garancija?',
-          a: 'Če v 30 dneh niste zadovoljni, pošljite nazaj in povrnili bomo polno ceno. Stroške vračila krijemo mi. Plus 1 leto garancije proizvajalca za tovarniške napake.',
+          a: 'Če v 30 dneh niste zadovoljni, pošljite nazaj in povrnili bomo polno ceno. Stroške vračila krijemo mi. Plus 24 mesecev EU potrošniške garancije za tovarniške napake (Direktiva 2019/771).',
         },
       },
     },

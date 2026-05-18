@@ -66,7 +66,7 @@ export const ga = {
         silicone: '2 inseirt sileacón inathraithe',
         packaging: 'Pacáistiú discréideach, seachadadh saor in aisce',
         refund: 'Ráthaíocht aisíoca 30 lá',
-        warranty: 'Ráthaíocht monaróra 1 bhliain',
+        warranty: 'Ráthaíocht tomhaltóra AE 24 mí',
       },
     },
     testimonials: {
@@ -107,7 +107,7 @@ export const ga = {
         },
         refund: {
           q: 'Conas a oibríonn an ráthaíocht 30 lá?',
-          a: 'Mura bhfuil tú sásta laistigh de 30 lá, seol ar ais é agus aisíocfaimid an praghas iomlán. Clúdaímid costais an aisíoctha. Móide ráthaíocht monaróra 1 bhliain le haghaidh lochtanna monarchan.',
+          a: 'Mura bhfuil tú sásta laistigh de 30 lá, seol ar ais é agus aisíocfaimid an praghas iomlán. Clúdaímid costais an aisíoctha. Móide ráthaíocht tomhaltóra AE 24 mí le haghaidh lochtanna monarchan (Treoir 2019/771).',
         },
       },
     },
@@ -128,6 +128,6 @@ export const ga = {
   },
   legal: {
     footer_disclaimer:
-      'Is gléas folláine é EBC Comfort, NÍ gléas leighis. Tá an táirge deartha le haghaidh compoird teasa ginearálta sa bholg íochtair. Téigh i gcomhairle le gairmí cúraim sláinte le haghaidh ceisteanna sláinte. Moltar do d’úsáideoirí 18+.',
+      'Is gléas folláine é EBC Comfort, NÍ gléas leighis. Tá an táirge deartha le haghaidh compoird teasa ginearálta sa bholg íochtair. Téigh i gcomhairle le gairmí cúraim sláinte le haghaidh ceisteanna sláinte. Moltar d’úsáideoirí 18+.',
   },
 };

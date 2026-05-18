@@ -2,6 +2,7 @@
 import { useState, useTransition } from 'react';
 import { useCart } from '@/lib/cart/CartContext';
 import { Locale } from '@/lib/i18n/config';
+import { bcp47 } from '@/lib/format';
 
 interface Props {
   locale: Locale;
@@ -21,7 +22,7 @@ export default function CartView({ locale, stripeConfigured }: Props) {
   const totalCents = subtotalCents + shippingCents + vatCents;
 
   function formatMoney(cents: number) {
-    return new Intl.NumberFormat('hu-HU', {
+    return new Intl.NumberFormat(bcp47(locale), {
       style: 'currency',
       currency,
     }).format(cents / 100);

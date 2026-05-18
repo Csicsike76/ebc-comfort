@@ -66,7 +66,7 @@ export const fi = {
         silicone: '2 vaihdettavaa silikonipehmustetta',
         packaging: 'Hillitty pakkaus, ilmainen toimitus',
         refund: '30 päivän palautusoikeus',
-        warranty: '1 vuoden valmistajan takuu',
+        warranty: '24 kuukauden EU-kuluttajatakuu',
       },
     },
     testimonials: {
@@ -107,7 +107,7 @@ export const fi = {
         },
         refund: {
           q: 'Miten 30 päivän takuu toimii?',
-          a: 'Jos et ole tyytyväinen 30 päivän kuluessa, palauta se ja palautamme koko hinnan. Maksamme palautuskustannukset. Lisäksi 1 vuoden valmistajan takuu tehdasvirheille.',
+          a: 'Jos et ole tyytyväinen 30 päivän kuluessa, palauta se ja palautamme koko hinnan. Maksamme palautuskustannukset. Lisäksi 24 kuukauden EU-kuluttajatakuu tehdasvirheille (direktiivi 2019/771).',
         },
       },
     },

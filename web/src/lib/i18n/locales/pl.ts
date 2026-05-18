@@ -66,7 +66,7 @@ export const pl = {
         silicone: '2 wymienne wkładki silikonowe',
         packaging: 'Dyskretne opakowanie, darmowa wysyłka',
         refund: '30-dniowa gwarancja zwrotu pieniędzy',
-        warranty: '1-roczna gwarancja producenta',
+        warranty: '24 miesiące gwarancji konsumenckiej UE',
       },
     },
     testimonials: {
@@ -107,7 +107,7 @@ export const pl = {
         },
         refund: {
           q: 'Jak działa 30-dniowa gwarancja?',
-          a: 'Jeśli nie jesteś zadowolony w ciągu 30 dni, odeślij produkt, a zwrócimy pełną kwotę. Pokrywamy koszty zwrotu. Plus 1 rok gwarancji producenta na wady fabryczne.',
+          a: 'Jeśli nie jesteś zadowolony w ciągu 30 dni, odeślij produkt, a zwrócimy pełną kwotę. Pokrywamy koszty zwrotu. Plus 24 miesiące gwarancji konsumenckiej UE na wady fabryczne (Dyrektywa 2019/771).',
         },
       },
     },

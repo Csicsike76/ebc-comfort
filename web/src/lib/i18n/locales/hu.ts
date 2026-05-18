@@ -66,7 +66,7 @@ export const hu = {
         silicone: '2 db cserélhető szilikon betét',
         packaging: 'Diszkrét csomagolás, ingyen kiszállítás',
         refund: '30 napos pénz-visszafizetési garancia',
-        warranty: '1 év gyártói garancia',
+        warranty: '24 hónap EU fogyasztói jótállás (Ptk. 6:159)',
       },
     },
     testimonials: {
@@ -107,16 +107,17 @@ export const hu = {
         },
         refund: {
           q: 'Mit takar a 30 napos garancia?',
-          a: 'Ha 30 napon belül nem vagy elégedett, küldd vissza és visszautaljuk a teljes vételárat. Szállítási költséget mi álljuk visszaküldésnél is. Plusz 1 év gyártói garancia gyári hibákra.',
+          a: 'Ha 30 napon belül nem vagy elégedett, küldd vissza és visszautaljuk a teljes vételárat. A visszaküldési költséget mi álljuk. Ezen felül 24 hónap EU fogyasztói jótállás gyári hibákra (Ptk. 6:159 + EU 2019/771).',
         },
       },
     },
     trust: {
       ce: 'CE tanúsítvány',
       iso: 'Bőrbarát anyag',
+      warranty: '24 hó EU jótállás',
       refund: 'Napos garancia',
       simplepay: 'SimplePay',
-      eu: 'EU shipping',
+      eu: 'EU szállítás',
     },
   },
   chat: {

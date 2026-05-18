@@ -37,6 +37,10 @@ serve(async (req: Request) => {
     callLogs,
     auditLog,
     npsResponses,
+    newsletterSubscriptions,
+    dsrRequests,
+    emailSentLog,
+    securityEvents,
   ] = await Promise.all([
     supa.from('profiles').select('*').eq('id', userId).single(),
     supa.from('user_roles').select('*').eq('user_id', userId),
@@ -53,6 +57,11 @@ serve(async (req: Request) => {
     supa.from('call_logs').select('*').eq('user_id', userId),
     supa.from('audit_log').select('*').eq('user_id', userId),
     supa.from('nps_responses').select('*').eq('user_id', userId),
+    // GDPR-audit gap: previously missing tables — added 2026-05-18
+    supa.from('newsletter_subscriptions').select('*').eq('user_id', userId),
+    supa.from('dsr_requests').select('*').eq('user_id', userId),
+    supa.from('email_sent_log').select('*').eq('user_id', userId),
+    supa.from('security_events').select('*').eq('user_id', userId),
   ]);
 
   // Audit-log this export event
@@ -82,6 +91,10 @@ serve(async (req: Request) => {
       call_logs: callLogs.data,
       audit_log: auditLog.data,
       nps_responses: npsResponses.data,
+      newsletter_subscriptions: newsletterSubscriptions.data,
+      dsr_requests: dsrRequests.data,
+      email_sent_log: emailSentLog.data,
+      security_events: securityEvents.data,
     },
   });
 });

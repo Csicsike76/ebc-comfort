@@ -66,7 +66,7 @@ export const hr = {
         silicone: '2 zamjenjiva silikonska uloška',
         packaging: 'Diskretno pakiranje, besplatna dostava',
         refund: '30-dnevno jamstvo povrata novca',
-        warranty: '1 godina proizvođačkog jamstva',
+        warranty: '24 mjeseca EU potrošačkog jamstva',
       },
     },
     testimonials: {
@@ -81,7 +81,7 @@ export const hr = {
           author: 'Beatrica, 41 · Debrecen',
         },
         zsofi: {
-          quote: 'Silikonski uložak je ugodan. USB-C puni brzo, a 5 razina stvarno su različite. Vrijedi cijenu.',
+          quote: 'Silikonski uložak je ugodan. USB-C puni brzo, a 5 razina stvarno su različite. Vrijedi cijene.',
           author: 'Sofija, 29 · Szeged',
         },
       },
@@ -107,7 +107,7 @@ export const hr = {
         },
         refund: {
           q: 'Kako funkcionira 30-dnevno jamstvo?',
-          a: 'Ako niste zadovoljni u roku od 30 dana, vratite ga i mi ćemo vam vratiti punu cijenu. Pokrivamo troškove povrata. Plus 1 godina proizvođačkog jamstva za tvorničke greške.',
+          a: 'Ako niste zadovoljni u roku od 30 dana, vratite ga i mi ćemo vam vratiti punu cijenu. Pokrivamo troškove povrata. Plus 24 mjeseca EU potrošačkog jamstva za tvorničke greške (Direktiva 2019/771).',
         },
       },
     },

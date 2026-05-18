@@ -66,7 +66,7 @@ export const et = {
         silicone: '2 vahetatavat silikoonist sisetükki',
         packaging: 'Diskreetne pakend, tasuta saatmine',
         refund: '30 päeva raha tagasi garantii',
-        warranty: '1 aasta tootja garantii',
+        warranty: '24 kuud EL tarbijagarantii',
       },
     },
     testimonials: {
@@ -107,7 +107,7 @@ export const et = {
         },
         refund: {
           q: 'Kuidas töötab 30-päevane garantii?',
-          a: 'Kui te pole 30 päeva jooksul rahul, saatke see tagasi ja me hüvitame täishinna. Tagastuskulud katame meie. Pluss 1 aasta tootja garantii tehasevigade osas.',
+          a: 'Kui te pole 30 päeva jooksul rahul, saatke see tagasi ja me hüvitame täishinna. Tagastuskulud katame meie. Pluss 24 kuud EL tarbijagarantii tehasevigade osas (direktiiv 2019/771).',
         },
       },
     },

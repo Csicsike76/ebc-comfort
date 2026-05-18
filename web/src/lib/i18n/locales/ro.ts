@@ -66,7 +66,7 @@ export const ro = {
         silicone: '2 inserții de silicon înlocuibile',
         packaging: 'Ambalaj discret, livrare gratuită',
         refund: 'Garanție de returnare 30 de zile',
-        warranty: 'Garanție producător 1 an',
+        warranty: '24 luni garanție legală UE',
       },
     },
     testimonials: {
@@ -107,7 +107,7 @@ export const ro = {
         },
         refund: {
           q: 'Cum funcționează garanția de 30 de zile?',
-          a: 'Dacă nu ești mulțumit în 30 de zile, returnează-l și îți restituim prețul integral. Acoperim costurile de returnare. Plus 1 an garanție producător pentru defecte de fabrică.',
+          a: 'Dacă nu ești mulțumit în 30 de zile, returnează-l și îți restituim prețul integral. Acoperim costurile de returnare. Plus 24 de luni garanție legală UE pentru defecte de fabrică (Directiva 2019/771).',
         },
       },
     },

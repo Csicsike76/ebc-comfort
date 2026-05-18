@@ -66,7 +66,7 @@ export const fr = {
         silicone: '2 inserts en silicone remplaçables',
         packaging: 'Emballage discret, livraison gratuite',
         refund: 'Garantie satisfait ou remboursé 30 jours',
-        warranty: 'Garantie fabricant 1 an',
+        warranty: '24 mois de garantie légale UE',
       },
     },
     testimonials: {
@@ -107,7 +107,7 @@ export const fr = {
         },
         refund: {
           q: 'Comment fonctionne la garantie de 30 jours ?',
-          a: 'Si tu n’es pas satisfait sous 30 jours, renvoie-le et nous remboursons le prix total. Nous couvrons les frais de retour. Plus une garantie fabricant de 1 an pour les défauts d’usine.',
+          a: 'Si tu n’es pas satisfait sous 30 jours, renvoie-le et nous remboursons le prix total. Nous couvrons les frais de retour. En plus, 24 mois de garantie légale UE pour les défauts de fabrication (Directive 2019/771).',
         },
       },
     },

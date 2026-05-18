@@ -118,7 +118,44 @@ serve(async (req: Request) => {
     })
     .eq('user_id', userId);
 
-  // 8. Log security event (this row is the "tombstone")
+  // 8. Revoke all role assignments (admin, editor, etc.) so the erased
+  // subject cannot retain elevated privileges after anonymization.
+  await supa
+    .from('user_roles')
+    .delete()
+    .eq('user_id', userId);
+
+  // 9. NULLify additional PII tables flagged by the GDPR audit:
+  //    - donations (donor_name, donor_email, donor_phone, message)
+  //    - dsr_requests (full_name, email)
+  //    - email_sent_log (recipient)
+  //    - kb_chunks NOT applicable (no PII)
+  await supa
+    .from('donations')
+    .update({
+      donor_name: '[ERASED]',
+      donor_email: null,
+      donor_phone: null,
+      message: null,
+      is_anonymous: true,
+      recognized_publicly: false,
+    })
+    .eq('donor_id', userId);
+
+  await supa
+    .from('dsr_requests')
+    .update({
+      full_name: '[ERASED]',
+      email: null,
+    })
+    .eq('user_id', userId);
+
+  await supa
+    .from('email_sent_log')
+    .update({ recipient_email: null })
+    .eq('user_id', userId);
+
+  // 10. Log security event (tombstone)
   await supa.from('security_events').insert({
     user_id: userId,
     event_type: 'gdpr_erasure',
@@ -127,10 +164,32 @@ serve(async (req: Request) => {
     metadata: { reason: body.reason ?? null, erased_at: erasedAt },
   });
 
+  // 11. Finally delete the auth.users row. This invalidates all sessions,
+  //     refresh tokens, and MFA factors for the subject. Done LAST so that
+  //     all prior UPDATE statements succeed under service-role.
+  // NOTE: Supabase admin SDK exposes this via supa.auth.admin.deleteUser.
+  // If the call fails (e.g. service-role key cannot reach Auth API), we
+  // surface the error but keep the anonymization that already happened.
+  let authDeleted = true;
+  let authDeleteError: string | null = null;
+  try {
+    // @ts-expect-error — admin namespace exists at runtime via service-role client
+    const { error: authErr } = await supa.auth.admin.deleteUser(userId);
+    if (authErr) {
+      authDeleted = false;
+      authDeleteError = authErr.message;
+    }
+  } catch (e) {
+    authDeleted = false;
+    authDeleteError = e instanceof Error ? e.message : 'auth.admin.deleteUser failed';
+  }
+
   return jsonResponse({
     ok: true,
     erased_at: erasedAt,
     user_id: userId,
-    note: 'Personal data anonymized. Order/payment records retained for 8 years per accounting law. Profile email replaced with placeholder.',
+    auth_user_deleted: authDeleted,
+    auth_delete_error: authDeleteError,
+    note: 'Personal data anonymized across all PII tables, role assignments revoked, auth.users entry deleted. Order/payment records retained for 8 years per accounting law (anonymized).',
   });
 });

@@ -43,7 +43,7 @@ export const nl = {
       },
       silicone: {
         title: 'Huidvriendelijk silicone',
-        body: 'Vervangbare silicone-oppervlak — comfortabel, makkelijk te reinigen, duurzaam.',
+        body: 'Vervangbaar silicone-oppervlak — comfortabel, makkelijk te reinigen, duurzaam.',
       },
     },
     how_it_works: {
@@ -66,7 +66,7 @@ export const nl = {
         silicone: '2 vervangbare silicone-inzetstukken',
         packaging: 'Discrete verpakking, gratis verzending',
         refund: '30 dagen niet-goed-geld-terug',
-        warranty: '1 jaar fabrieksgarantie',
+        warranty: '24 maanden EU consumentengarantie',
       },
     },
     testimonials: {
@@ -107,7 +107,7 @@ export const nl = {
         },
         refund: {
           q: 'Hoe werkt de 30 dagen garantie?',
-          a: 'Niet tevreden binnen 30 dagen? Stuur terug en wij betalen de volledige prijs terug. Wij dragen de retourkosten. Plus 1 jaar fabrieksgarantie op fabrieksfouten.',
+          a: 'Niet tevreden binnen 30 dagen? Stuur terug en wij betalen de volledige prijs terug. Wij dragen de retourkosten. Plus 24 maanden EU consumentengarantie op fabrieksfouten (Richtlijn 2019/771).',
         },
       },
     },

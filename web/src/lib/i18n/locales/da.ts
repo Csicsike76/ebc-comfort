@@ -66,7 +66,7 @@ export const da = {
         silicone: '2 udskiftelige silikone-indlæg',
         packaging: 'Diskret emballage, gratis fragt',
         refund: '30 dages pengene-tilbage-garanti',
-        warranty: '1 års producentgaranti',
+        warranty: '24 måneders EU-forbrugergaranti',
       },
     },
     testimonials: {
@@ -107,7 +107,7 @@ export const da = {
         },
         refund: {
           q: 'Hvordan fungerer 30-dages garantien?',
-          a: 'Hvis du ikke er tilfreds inden for 30 dage, send tilbage og vi refunderer hele prisen. Vi dækker returomkostningerne. Plus 1 års producentgaranti for fabriksfejl.',
+          a: 'Hvis du ikke er tilfreds inden for 30 dage, send tilbage og vi refunderer hele prisen. Vi dækker returomkostningerne. Plus 24 måneders EU-forbrugergaranti for fabriksfejl (direktiv 2019/771).',
         },
       },
     },

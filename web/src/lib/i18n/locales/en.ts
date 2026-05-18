@@ -66,7 +66,7 @@ export const en = {
         silicone: '2 replaceable silicone inserts',
         packaging: 'Discreet packaging, free shipping',
         refund: '30-day money-back guarantee',
-        warranty: '1-year manufacturer warranty',
+        warranty: '24-month EU consumer warranty',
       },
     },
     testimonials: {
@@ -107,7 +107,7 @@ export const en = {
         },
         refund: {
           q: 'How does the 30-day guarantee work?',
-          a: 'If you are not satisfied within 30 days, send it back and we refund the full price. We cover the return shipping. Plus a 1-year manufacturer warranty for factory defects.',
+          a: 'If you are not satisfied within 30 days, send it back and we refund the full price. We cover the return shipping. On top of that, you have a 24-month EU consumer warranty for factory defects (Directive 2019/771).',
         },
       },
     },

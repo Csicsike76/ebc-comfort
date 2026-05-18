@@ -1,6 +1,7 @@
 import Counter from '@/components/Counter';
 import { getDict, tt } from '@/lib/i18n';
 import { Locale } from '@/lib/i18n/config';
+import { bcp47 } from '@/lib/format';
 
 const ITEM_KEYS = ['item', 'accu', 'silicone', 'packaging', 'refund', 'warranty'] as const;
 
@@ -24,7 +25,7 @@ export default function PricingCard({ locale, href }: Props) {
           from={999}
           target={100}
           durationMs={1600}
-          locale={locale === 'hu' ? 'hu-HU' : 'en-US'}
+          locale={bcp47(locale)}
         /> €
       </div>
       <p className="text-sm text-[var(--color-muted)]">{t('home.pricing.subline')}</p>

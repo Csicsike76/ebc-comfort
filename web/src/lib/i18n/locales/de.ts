@@ -66,7 +66,7 @@ export const de = {
         silicone: '2 austauschbare Silikon-Einsätze',
         packaging: 'Diskrete Verpackung, kostenloser Versand',
         refund: '30-Tage Geld-zurück-Garantie',
-        warranty: '1 Jahr Herstellergarantie',
+        warranty: '24 Monate EU-Verbrauchergewährleistung',
       },
     },
     testimonials: {
@@ -107,7 +107,7 @@ export const de = {
         },
         refund: {
           q: 'Wie funktioniert die 30-Tage-Garantie?',
-          a: 'Wenn du innerhalb von 30 Tagen nicht zufrieden bist, sende es zurück und wir erstatten den vollen Preis. Wir übernehmen die Rücksendekosten. Plus 1 Jahr Herstellergarantie für Werksmängel.',
+          a: 'Wenn du innerhalb von 30 Tagen nicht zufrieden bist, sende es zurück und wir erstatten den vollen Preis. Wir übernehmen die Rücksendekosten. Hinzu kommt eine 24-monatige EU-Verbrauchergewährleistung für Fabrikfehler (Richtlinie 2019/771).',
         },
       },
     },

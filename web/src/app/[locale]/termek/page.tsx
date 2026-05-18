@@ -170,7 +170,7 @@ export default async function ProductPage({ params }: Props) {
                 label="Méret"
                 value={dims.l ? `${dims.l}×${dims.w}×${dims.h} mm` : '120×70×30 mm'}
               />
-              <Spec label="Garancia" value={`${product.warranty_months ?? 12} hó`} />
+              <Spec label="Garancia" value={`${product.warranty_months ?? 24} hó (EU 2019/771)`} />
               <Spec label="Hőfokozat" value="5 fokozat (50/55/60/65/70 °C)" />
               <Spec label="Hőmérséklet-pontosság" value="±3 °C" />
               <Spec label="Akkumulátor" value="8000 mAh Li-ion" />

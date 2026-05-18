@@ -66,7 +66,7 @@ export const lv = {
         silicone: '2 maināmi silikona ieliktņi',
         packaging: 'Diskrēts iepakojums, bezmaksas piegāde',
         refund: '30 dienu naudas atmaksas garantija',
-        warranty: '1 gada ražotāja garantija',
+        warranty: '24 mēnešu ES patērētāju garantija',
       },
     },
     testimonials: {
@@ -107,7 +107,7 @@ export const lv = {
         },
         refund: {
           q: 'Kā darbojas 30 dienu garantija?',
-          a: 'Ja 30 dienu laikā neesat apmierināts, nosūtiet to atpakaļ un mēs atmaksāsim pilnu cenu. Atgriešanas izmaksas sedzam mēs. Plus 1 gada ražotāja garantija rūpnīcas defektiem.',
+          a: 'Ja 30 dienu laikā neesat apmierināts, nosūtiet to atpakaļ un mēs atmaksāsim pilnu cenu. Atgriešanas izmaksas sedzam mēs. Plus 24 mēnešu ES patērētāju garantija rūpnīcas defektiem (Direktīva 2019/771).',
         },
       },
     },

@@ -127,11 +127,18 @@ Szöveg:
     aiError = e instanceof Error ? e.message : 'AI call failed';
   }
 
+  // Fail-CLOSED verdict logic. If keyword scan or AI nuance check find any
+  // problem, we surface it. If the AI nuance check failed (network, parse,
+  // invalid JSON), we DOWNGRADE to 'review_needed' so an editor sees the
+  // result instead of silently approving regulated text.
   let verdict: 'clean' | 'review_needed' | 'forbidden';
   if (hits.length > 0) {
     verdict = 'forbidden';
   } else if (aiReview && (aiReview.verdict === 'forbidden' || aiReview.verdict === 'review_needed')) {
     verdict = aiReview.verdict as 'forbidden' | 'review_needed';
+  } else if (!aiReview) {
+    // AI nuance check did not return a usable result → fail-closed.
+    verdict = 'review_needed';
   } else {
     verdict = 'clean';
   }
