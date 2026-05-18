@@ -75,6 +75,23 @@ export default function PaletteSync() {
           /* ignore */
         }
       }
+
+      if (e.key === 'ebc_font_key' && e.newValue) {
+        try {
+          const { key, family, googleQuery } = JSON.parse(e.newValue);
+          if (typeof key !== 'string' || typeof family !== 'string') return;
+          if (googleQuery && !document.querySelector(`link[data-ebc-font="${key}"]`)) {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = `https://fonts.googleapis.com/css2?family=${googleQuery}&display=swap`;
+            link.dataset.ebcFont = key;
+            document.head.appendChild(link);
+          }
+          document.documentElement.style.setProperty('--font-sans', family);
+        } catch {
+          /* ignore */
+        }
+      }
     }
 
     window.addEventListener('storage', onStorage);

@@ -46,6 +46,24 @@ export default function PaletteBootstrap() {
     if (!isNaN(g)) {
       root.setProperty('--globe-size-vmin', String(g));
     }
+
+    // Font (read from localStorage ebc_font_key, fall back to ebc_font cookie key)
+    try {
+      var fontRaw = localStorage.getItem('ebc_font_key');
+      if (fontRaw) {
+        var fontData = JSON.parse(fontRaw);
+        if (fontData && fontData.family && cookies['ebc_font'] === fontData.key) {
+          if (fontData.googleQuery && !document.querySelector('link[data-ebc-font="' + fontData.key + '"]')) {
+            var link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = 'https://fonts.googleapis.com/css2?family=' + fontData.googleQuery + '&display=swap';
+            link.dataset.ebcFont = fontData.key;
+            document.head.appendChild(link);
+          }
+          root.setProperty('--font-sans', fontData.family);
+        }
+      }
+    } catch (e2) {}
   } catch (e) {}
 })();
 `;

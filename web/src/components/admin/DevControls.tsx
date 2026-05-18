@@ -26,6 +26,11 @@ const ROTATE_INTERVALS = [
   { label: '30 mp', ms: 30000 },
   { label: '1 perc', ms: 60000 },
   { label: '5 perc', ms: 300000 },
+  { label: '1 óra', ms: 3600000 },
+  { label: '3 óra', ms: 10800000 },
+  { label: '6 óra', ms: 21600000 },
+  { label: '12 óra', ms: 43200000 },
+  { label: '24 óra', ms: 86400000 },
 ] as const;
 
 const COOKIE_FONT = 'ebc_font';
@@ -146,6 +151,11 @@ export default function DevControls() {
     loadFontStylesheet(fo);
     document.documentElement.style.setProperty('--font-sans', fo.family);
     setCookie(COOKIE_FONT, key);
+    // Cross-tab sync trigger
+    localStorage.setItem(
+      'ebc_font_key',
+      JSON.stringify({ key, family: fo.family, googleQuery: fo.googleQuery, ts: Date.now() })
+    );
   }
 
   function pickRadius(v: number) {
@@ -261,7 +271,7 @@ export default function DevControls() {
               type="button"
               onClick={() => setIntervalMs(iv.ms)}
               disabled={!autoRotate}
-              className={`px-2 py-1.5 rounded-full text-xs font-semibold transition-colors disabled:opacity-50 ${
+              className={`px-2 py-1.5 rounded-full text-[11px] font-semibold transition-colors disabled:opacity-50 ${
                 intervalMs === iv.ms
                   ? 'bg-[var(--color-accent)] text-white'
                   : 'border border-[var(--color-border)] hover:bg-[var(--color-accent)]/10'
