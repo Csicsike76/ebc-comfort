@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server';
 import { getSupabaseServerClient } from '@/lib/supabase/server';
-import { sanitizeNext } from '@/lib/auth-safe';
+import { sanitizeNext, htmlEscape } from '@/lib/auth-safe';
 
 export async function GET(req: NextRequest) {
   const reqUrl = new URL(req.url);
@@ -12,21 +12,23 @@ export async function GET(req: NextRequest) {
     await supa.auth.exchangeCodeForSession(code);
   }
 
-  // The Netlify Next.js plugin merges the request's query string into the
-  // redirect Location, so /auth/callback?next=https://evil keeps echoing
-  // evil.example back even though our handler returns a bare URL. To stop
-  // that, we render a tiny HTML page that does a client-side <meta refresh>
-  // + a <script> redirect to the sanitized target. The Location header is
-  // gone entirely; nothing can inject query into a header that does not exist.
+  // Defense in depth: `next` is already restricted to a strict path-whitelist
+  // (SAFE_PATH_RE) so cannot contain quotes/angle brackets. We still HTML-escape
+  // every interpolation site so any future relaxation of the sanitizer does
+  // NOT silently introduce XSS.
   const target = `${reqUrl.origin}${next}`;
+  const targetAttr = htmlEscape(target);
+  const targetJson = JSON.stringify(target); // JS-safe — escapes quotes and slashes
+
   const html = `<!doctype html>
 <html><head>
 <meta charset="utf-8">
-<meta http-equiv="refresh" content="0; url=${target}">
+<meta http-equiv="refresh" content="0; url=${targetAttr}">
+<meta name="robots" content="noindex,nofollow">
 <title>Redirecting…</title>
 </head><body>
-<script>window.location.replace(${JSON.stringify(target)});</script>
-<p>Redirecting to <a href="${target}">${target}</a>…</p>
+<script>window.location.replace(${targetJson});</script>
+<noscript><a href="${targetAttr}">Continue →</a></noscript>
 </body></html>`;
   return new Response(html, {
     status: 200,
@@ -34,6 +36,7 @@ export async function GET(req: NextRequest) {
       'Content-Type': 'text/html; charset=utf-8',
       'Cache-Control': 'no-store',
       'Referrer-Policy': 'no-referrer',
+      'X-Content-Type-Options': 'nosniff',
     },
   });
 }

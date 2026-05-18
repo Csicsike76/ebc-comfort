@@ -12,19 +12,24 @@
     "packageJson": {
       "dependencies": [
         "npm:@anthropic-ai/sdk@0.96",
+        "npm:@playwright/test@^1.60.0",
         "npm:@supabase/ssr@~0.10.3",
         "npm:@supabase/supabase-js@^2.105.4",
         "npm:@tailwindcss/postcss@4",
+        "npm:@testing-library/jest-dom@^6.9.1",
+        "npm:@testing-library/react@^16.3.2",
         "npm:@types/d3-geo@^3.1.0",
         "npm:@types/node@20",
         "npm:@types/react-dom@19",
         "npm:@types/react@19",
         "npm:@types/topojson-client@^3.1.5",
+        "npm:@vitest/coverage-v8@^4.1.6",
         "npm:d3-geo@^3.1.1",
         "npm:eslint-config-next@16.2.6",
         "npm:eslint@9",
         "npm:i18next-browser-languagedetector@^8.2.1",
         "npm:i18next@^26.2.0",
+        "npm:jsdom@^29.1.1",
         "npm:next@16.2.6",
         "npm:react-dom@19.2.4",
         "npm:react-i18next@^17.0.8",
@@ -32,7 +37,8 @@
         "npm:stripe@^22.1.1",
         "npm:tailwindcss@4",
         "npm:topojson-client@^3.1.0",
-        "npm:typescript@5"
+        "npm:typescript@5",
+        "npm:vitest@^4.1.6"
       ]
     }
   }

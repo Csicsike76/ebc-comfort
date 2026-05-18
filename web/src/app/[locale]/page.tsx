@@ -10,6 +10,7 @@ import CookieConsent from '@/components/CookieConsent';
 import CookieSettingsLink from '@/components/CookieSettingsLink';
 import MarketingPixels from '@/components/MarketingPixels';
 import UtmTracker from '@/components/UtmTracker';
+import MobileNav from '@/components/MobileNav';
 import { CartProvider } from '@/lib/cart/CartContext';
 import FadeIn from '@/components/FadeIn';
 import StickyCta from '@/components/StickyCta';
@@ -62,6 +63,18 @@ export default async function Home({ params }: Props) {
               <CartIndicator locale={locale} />
               <ThemeToggle locale={locale} />
               <LocaleSwitcher currentLocale={locale} />
+              <MobileNav
+                locale={locale}
+                items={[
+                  { href: '/termek', label: t('common.products') },
+                  { href: '/edukacio', label: t('common.education') },
+                  { href: '/tamogatas', label: t('common.support') },
+                  { href: '/rolunk', label: t('common.about') },
+                  { href: '/gyik', label: 'GY.I.K.' },
+                  { href: '/aszf', label: 'ÁSZF' },
+                  { href: '/adatvedelem', label: 'Adatvédelem' },
+                ]}
+              />
             </div>
           </div>
         </header>

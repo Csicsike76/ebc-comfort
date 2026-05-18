@@ -11,6 +11,26 @@ const TELEGRAM_BOT_TOKEN = Deno.env.get('TELEGRAM_BOT_TOKEN');
 const TELEGRAM_ADMIN_CHAT_ID = Deno.env.get('TELEGRAM_ADMIN_CHAT_ID');
 const INTERNAL_SECRET = Deno.env.get('INTERNAL_NOTIFY_SECRET');
 
+/**
+ * Constant-time string equality. Prevents timing side-channels that would
+ * otherwise let an attacker brute-force the shared secret one character at
+ * a time. Both inputs are converted to bytes; lengths are compared via the
+ * same XOR fold so even length mismatches do not short-circuit.
+ */
+function constantTimeEquals(a: string, b: string): boolean {
+  const aBytes = new TextEncoder().encode(a);
+  const bBytes = new TextEncoder().encode(b);
+  // Make a fixed-size buffer so length-difference does not exit early.
+  const max = Math.max(aBytes.length, bBytes.length, 32);
+  let diff = aBytes.length ^ bBytes.length;
+  for (let i = 0; i < max; i++) {
+    const ai = aBytes[i] ?? 0;
+    const bi = bBytes[i] ?? 0;
+    diff |= ai ^ bi;
+  }
+  return diff === 0;
+}
+
 interface NotifyRequest {
   text: string;
   parse_mode?: 'HTML' | 'Markdown';
@@ -27,9 +47,9 @@ serve(async (req: Request) => {
     return errorResponse('Telegram bot not configured', 500);
   }
 
-  // --- auth: shared-secret OR admin user JWT ---
+  // --- auth: shared-secret (constant-time compare) OR admin user JWT ---
   const headerSecret = req.headers.get('X-Internal-Secret') ?? '';
-  const isInternal = INTERNAL_SECRET && headerSecret === INTERNAL_SECRET;
+  const isInternal = INTERNAL_SECRET ? constantTimeEquals(headerSecret, INTERNAL_SECRET) : false;
 
   if (!isInternal) {
     const userId = await getUserIdFromRequest(req);

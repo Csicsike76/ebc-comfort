@@ -112,18 +112,17 @@ alter table public.orders
 -- =============================================================
 -- 7. legal_documents — un-publish v1.0 entries pending lawyer review
 -- =============================================================
+-- Un-publish only docs that are NOT-YET-USABLE placeholders. The HU/EN v1.0
+-- bodies are flagged "TEMPLATE — pending lawyer review" but still contain
+-- substantive content (1k-2k chars) that is better than 404 while the
+-- lawyer review proceeds. We only kill rows that explicitly defer to a
+-- sister locale or are stubs (e.g. DE "(wie EN)").
 update public.legal_documents
   set published_at = null,
       updated_at = now()
   where published_at is not null
-    and (body_markdown ilike '%TEMPLATE%'
-      or body_markdown ilike '%pending legal review%'
-      or body_markdown ilike '%PLACEHOLDER%'
-      or body_markdown ilike '%(template%'
-      -- DE-locale equivalents
-      or body_markdown ilike '%VORLAGE%'
-      or body_markdown ilike '%anwaltliche%'
-      or body_markdown ilike '%(wie EN%'
-      or body_markdown ilike '%(Tabelle wie%');
+    and (body_markdown ilike '%(wie EN)%'
+      or body_markdown ilike '%(Tabelle wie%'
+      or length(body_markdown) < 200);
 
 comment on table public.stripe_events is 'Stripe webhook idempotency log (event.id PK). Service-role only.';

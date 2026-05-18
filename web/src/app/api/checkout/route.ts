@@ -240,7 +240,9 @@ export async function POST(req: Request) {
           price_data: {
             currency: currency.toLowerCase(),
             unit_amount: vatCents,
-            product_data: { name: 'ÁFA (27%)' },
+            product_data: {
+              name: `VAT ${(vatRate * 100).toFixed(Number.isInteger(vatRate * 100) ? 0 : 1)}% (${shipping_address.country})`,
+            },
           },
         },
       ],
