@@ -6,6 +6,7 @@ import { formatMoneyCents } from '@/lib/admin/guard';
 import { renderMarkdown } from '@/lib/markdown';
 import PublicShell from '@/components/PublicShell';
 import AddToCartButton from '@/components/AddToCartButton';
+import { getPublicPagesDict } from '@/lib/i18n/public-pages';
 
 interface Props {
   params: Promise<{ locale: string }>;
@@ -30,6 +31,8 @@ export default async function ProductPage({ params }: Props) {
   const locale = localeParam as Locale;
   const dict = getDict(locale);
   const t = (key: string) => tt(dict, key);
+
+  const pp = getPublicPagesDict(locale).termek;
 
   const supa = await getSupabaseServerClient();
   const { data: product } = await supa
@@ -144,7 +147,7 @@ export default async function ProductPage({ params }: Props) {
             <div className="mt-8">
               <AddToCartButton
                 locale={locale}
-                label={t('product.add_to_cart')}
+                label={pp.add_to_cart}
                 item={{
                   product_id: product.id,
                   sku: product.sku,
@@ -155,41 +158,41 @@ export default async function ProductPage({ params }: Props) {
                     (images?.[0] as ImageRow | undefined)?.url ?? '/brand/logo-luxus.png',
                 }}
               />
-              <p className="text-xs text-[var(--color-muted)] mt-3">
-                ⓘ Pre-launch fázis. Stripe-konfiguráció finalizálás alatt — a fizetés a végén
-                placeholder-üzemmódban lehet még; valós kártya-terhelés csak a launch-kor.
-              </p>
+              <p className="text-xs text-[var(--color-muted)] mt-3">ⓘ {pp.pre_launch_note}</p>
             </div>
 
             <hr className="my-8 border-[var(--color-border)]" />
 
-            <h2 className="font-bold text-lg mb-3">{t('product.specs')}</h2>
+            <h2 className="font-bold text-lg mb-3">{pp.specs_title}</h2>
             <dl className="grid grid-cols-2 gap-3 text-sm">
-              <Spec label="Súly" value={`${product.weight_grams ?? '—'} g`} />
+              <Spec label={pp.spec_labels.weight} value={`${product.weight_grams ?? '—'} g`} />
               <Spec
-                label="Méret"
+                label={pp.spec_labels.dimensions}
                 value={dims.l ? `${dims.l}×${dims.w}×${dims.h} mm` : '120×70×30 mm'}
               />
-              <Spec label="Garancia" value={`${product.warranty_months ?? 24} hó (EU 2019/771)`} />
-              <Spec label="Hőfokozat" value="5 fokozat (50/55/60/65/70 °C)" />
-              <Spec label="Hőmérséklet-pontosság" value="±3 °C" />
-              <Spec label="Akkumulátor" value="8000 mAh Li-ion" />
-              <Spec label="Üzemidő" value="~10 óra (alacsony fokozaton)" />
-              <Spec label="Töltés" value="USB-C bemenet, ~3 óra" />
-              <Spec label="Kimenet" value="1× USB (single port)" />
-              <Spec label="Hőelem mérete" value="120×50 mm szilikon" />
-              <Spec label="Kábel" value="60 cm fekete szilikon" />
-              <Spec label="Rögzítés" value="Állítható derékpánt + csat" />
-              <Spec label="Gél-betét" value="2 db cserélhető, öntapadós" />
-              <Spec label="Védelem" value="Túlmelegedés auto-kikapcsolás" />
-              <Spec label="Szín" value="Fekete" />
-              <Spec label="Tanúsítvány" value="CE-LVD + CE-EMC + RoHS" />
+              <Spec
+                label={pp.spec_labels.warranty}
+                value={`${product.warranty_months ?? 24} hó (EU 2019/771)`}
+              />
+              <Spec label={pp.spec_labels.temp_levels} value="50 / 55 / 60 / 65 / 70 °C" />
+              <Spec label={pp.spec_labels.temp_accuracy} value="±3 °C" />
+              <Spec label={pp.spec_labels.battery} value="8000 mAh Li-ion" />
+              <Spec label={pp.spec_labels.runtime} value="~10 h @ 50 °C" />
+              <Spec label={pp.spec_labels.charging} value="USB-C, ~3 h" />
+              <Spec label={pp.spec_labels.output} value="1× USB" />
+              <Spec label={pp.spec_labels.heating_element} value="120×50 mm silicone" />
+              <Spec label={pp.spec_labels.cable} value="60 cm silicone, black" />
+              <Spec label={pp.spec_labels.strap} value="Adjustable + buckle" />
+              <Spec label={pp.spec_labels.gel_pad} value="2× replaceable" />
+              <Spec label={pp.spec_labels.protection} value="Auto overheat shutdown" />
+              <Spec label={pp.spec_labels.color} value="Black" />
+              <Spec label={pp.spec_labels.cert} value="CE-LVD + CE-EMC + RoHS" />
             </dl>
 
             {tr?.long_description && (
               <>
                 <hr className="my-8 border-[var(--color-border)]" />
-                <h2 className="font-bold text-lg mb-3">Leírás</h2>
+                <h2 className="font-bold text-lg mb-3">{pp.description_title}</h2>
                 <div className="text-sm">{renderMarkdown(tr.long_description)}</div>
               </>
             )}
@@ -197,26 +200,16 @@ export default async function ProductPage({ params }: Props) {
         </div>
 
         <section className="glass-card p-6 sm:p-10 mt-10">
-          <h2 className="font-bold text-xl mb-4">Mire jó?</h2>
+          <h2 className="font-bold text-xl mb-4">{pp.benefits_title}</h2>
           <ul className="grid sm:grid-cols-2 gap-3 text-sm">
-            {[
-              'Alhasi komfort-érzés természetes hőterápiával',
-              'Diszkrét — fehérnemű alatt láthatatlan',
-              'Csendes — munkahelyen vagy utazás közben sem hallható',
-              'Cserélhető szilikon felület — könnyen tisztítható',
-              'Túlmelegedés-védelem — biztonságos folyamatos viselet',
-              'USB-C tölthető — gyors, modern',
-            ].map((b, i) => (
+            {pp.benefits.map((b, i) => (
               <li key={i} className="flex gap-2">
                 <span className="text-[var(--color-accent-2)]">✓</span>
                 <span>{b}</span>
               </li>
             ))}
           </ul>
-          <p className="text-xs text-[var(--color-muted)] mt-6 italic">
-            EBC Comfort wellness-eszköz, NEM orvosi eszköz. Egészségügyi panasz esetén keress fel
-            szakorvost. 18+ felhasználóknak ajánlott.
-          </p>
+          <p className="text-xs text-[var(--color-muted)] mt-6 italic">{pp.medical_disclaimer}</p>
         </section>
       </article>
     </PublicShell>

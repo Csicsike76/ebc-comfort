@@ -3,6 +3,7 @@ import { isValidLocale, Locale } from '@/lib/i18n/config';
 import { getSupabaseServerClient } from '@/lib/supabase/server';
 import { sendSupportReceived } from '@/lib/email/send';
 import PublicShell from '@/components/PublicShell';
+import { getPublicPagesDict } from '@/lib/i18n/public-pages';
 
 interface Props {
   params: Promise<{ locale: string }>;
@@ -14,6 +15,7 @@ export default async function SupportPage({ params, searchParams }: Props) {
   const { done } = await searchParams;
   if (!isValidLocale(localeParam)) notFound();
   const locale = localeParam as Locale;
+  const dict = getPublicPagesDict(locale).tamogatas;
 
   async function submitSupportRequest(formData: FormData) {
     'use server';
@@ -79,106 +81,82 @@ export default async function SupportPage({ params, searchParams }: Props) {
     <PublicShell locale={locale}>
       <div className="max-w-4xl mx-auto safe-x py-12 sm:py-16 space-y-8">
         <div className="glass-card p-7 sm:p-10">
-          <h1 className="text-3xl sm:text-4xl font-bold mb-3">Támogatási program</h1>
-          <p className="text-base text-[var(--color-muted)] leading-relaxed">
-            EBC Wellness elkötelezett amellett, hogy alacsony jövedelmű nőknek is elérhető legyen a
-            termék. Minden 20. rendelés árából egy EBC Comfort darabot átadunk egy rászorulónak.
-            Pályázni az alábbi űrlapon lehet.
-          </p>
+          <h1 className="text-3xl sm:text-4xl font-bold mb-3">{dict.title}</h1>
+          <p className="text-base text-[var(--color-muted)] leading-relaxed">{dict.subtitle}</p>
         </div>
 
         {done === 'request' && (
           <div className="glass-card p-5 border-l-4 border-green-500 text-sm">
-            ✅ Köszönjük! A kérvényt megkaptuk. 7-14 napon belül e-mailben válaszolunk.
+            ✅ {dict.submitted_ok}
           </div>
         )}
         {done === 'newsletter' && (
           <div className="glass-card p-5 border-l-4 border-green-500 text-sm">
-            ✅ Köszönjük a feliratkozást! Értesítünk a launch-kor.
+            ✅ {dict.submitted_ok}
           </div>
         )}
 
         <section className="glass-card p-7 sm:p-10">
-          <h2 className="text-2xl font-bold mb-3">Támogatási kérvény</h2>
-          <p className="text-sm text-[var(--color-muted)] mb-6">
-            Rászorulóknak nyújtott EBC Comfort támogatás. A bírálat egyedi mérlegelés alapján
-            történik, válasz 7-14 napon belül.
-          </p>
+          <h2 className="text-2xl font-bold mb-3">{dict.form_section_title}</h2>
           <form action={submitSupportRequest} className="space-y-4">
-            <Field label="Teljes név" name="full_name" required />
+            <Field label={dict.field_full_name} name="full_name" required />
             <div className="grid sm:grid-cols-2 gap-4">
-              <Field label="Email" name="email" type="email" />
-              <Field label="Telefon" name="phone" type="tel" />
+              <Field label={dict.field_email} name="email" type="email" />
+              <Field label={dict.field_phone} name="phone" type="tel" />
             </div>
             <label className="block">
               <span className="block text-xs uppercase tracking-wider text-[var(--color-muted)] mb-1">
-                Indoklás (min. 30 karakter) <span className="text-red-500">*</span>
+                {dict.field_reason} <span className="text-red-500">*</span>
               </span>
               <textarea
                 name="reason"
                 required
                 minLength={30}
                 rows={6}
-                placeholder="Írj röviden a helyzetedről és arról, miért lenne fontos a támogatás."
                 className="w-full px-3 py-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] text-sm"
               />
             </label>
-            <p className="text-xs text-[var(--color-muted)]">
-              A megadott adatokat kizárólag a kérvény bírálatára használjuk fel (GDPR 6.(1)(a)
-              hozzájárulás). Visszavonás:{' '}
-              <a href="mailto:support@ebc-wellness.eu" className="underline">
-                support@ebc-wellness.eu
-              </a>
-              .
-            </p>
+            <p className="text-xs text-[var(--color-muted)]">{dict.program_note}</p>
             <div className="flex justify-end">
               <button
                 type="submit"
                 className="px-6 py-2 rounded-full bg-[var(--color-accent)] text-white text-sm font-semibold"
               >
-                Kérvény beküldése
+                {dict.submit}
               </button>
             </div>
           </form>
         </section>
 
         <section className="glass-card p-7 sm:p-10">
-          <h2 className="text-2xl font-bold mb-3">Adományzás / értesítés</h2>
-          <p className="text-sm text-[var(--color-muted)] mb-6">
-            Szeretnél támogatni minket adományzással, vagy értesítést kérni a launch-ról? Hagyd
-            meg az email-címed — amikor elindul, értesítünk.
-            <br />
-            <em className="text-xs">
-              (Stripe-fizetés hamarosan; addig csak email-pledge gyűjtésre megyünk.)
-            </em>
-          </p>
+          <h2 className="text-2xl font-bold mb-3">{dict.newsletter_title}</h2>
+          <p className="text-sm text-[var(--color-muted)] mb-6">{dict.newsletter_intro}</p>
           <form action={submitNewsletter} className="flex flex-col sm:flex-row gap-3">
             <input
               type="email"
               name="email"
               required
-              placeholder="te@email.hu"
+              placeholder={dict.newsletter_email}
+              aria-label={dict.newsletter_email}
               className="flex-1 px-4 py-2.5 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] text-sm"
             />
             <select
               name="topic"
+              aria-label={dict.newsletter_topic}
               className="px-4 py-2.5 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] text-sm"
               defaultValue="donation"
             >
-              <option value="donation">Adományozó vagyok</option>
-              <option value="launch">Launch-értesítés</option>
-              <option value="general">Általános hírlevél</option>
+              <option value="donation">Donation</option>
+              <option value="launch">Launch</option>
+              <option value="general">General</option>
             </select>
             <button
               type="submit"
               className="px-6 py-2.5 rounded-full bg-[var(--color-accent)] text-white text-sm font-semibold"
             >
-              Feliratkozás
+              {dict.newsletter_submit}
             </button>
           </form>
-          <p className="text-xs text-[var(--color-muted)] mt-3">
-            Leiratkozni bármikor lehet az emailben lévő linken.
-          </p>
         </section>
       </div>
     </PublicShell>

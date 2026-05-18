@@ -31,6 +31,13 @@ export default function CartView({ locale, stripeConfigured }: Props) {
   const [pending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const [country, setCountry] = useState<string>(DEFAULT_COUNTRY);
+  const [consents, setConsents] = useState({
+    aszf: false,
+    privacy: false,
+    age: false,
+    withdrawal: false,
+  });
+  const allConsented = consents.aszf && consents.privacy && consents.age && consents.withdrawal;
   const dict = getCartDict(locale);
 
   const shippingCents = computeShipping(subtotalCents, items.length);
@@ -47,6 +54,10 @@ export default function CartView({ locale, stripeConfigured }: Props) {
 
   function handleCheckout(formData: FormData) {
     setError(null);
+    if (!allConsented) {
+      setError(dict.must_accept_legal);
+      return;
+    }
     const payload = {
       locale,
       items: items.map((i) => ({
@@ -204,8 +215,58 @@ export default function CartView({ locale, stripeConfigured }: Props) {
             </label>
           </div>
 
+          <fieldset className="border-t border-[var(--color-border)] pt-4 space-y-2">
+            <legend className="text-sm font-semibold mb-2 px-1">{dict.legal_title}</legend>
+            <ConsentBox
+              id="consent-aszf"
+              checked={consents.aszf}
+              onChange={(v) => setConsents((p) => ({ ...p, aszf: v }))}
+              label={
+                <>
+                  {dict.consent_aszf}{' '}
+                  <a href={`/${locale}/aszf`} target="_blank" rel="noopener" className="underline">
+                    ↗
+                  </a>
+                </>
+              }
+            />
+            <ConsentBox
+              id="consent-privacy"
+              checked={consents.privacy}
+              onChange={(v) => setConsents((p) => ({ ...p, privacy: v }))}
+              label={
+                <>
+                  {dict.consent_privacy}{' '}
+                  <a
+                    href={`/${locale}/adatvedelem`}
+                    target="_blank"
+                    rel="noopener"
+                    className="underline"
+                  >
+                    ↗
+                  </a>
+                </>
+              }
+            />
+            <ConsentBox
+              id="consent-age"
+              checked={consents.age}
+              onChange={(v) => setConsents((p) => ({ ...p, age: v }))}
+              label={dict.consent_age}
+            />
+            <ConsentBox
+              id="consent-withdrawal"
+              checked={consents.withdrawal}
+              onChange={(v) => setConsents((p) => ({ ...p, withdrawal: v }))}
+              label={dict.consent_withdrawal}
+            />
+            <p className="text-xs text-[var(--color-muted)] pl-1">{dict.withdrawal_hint}</p>
+          </fieldset>
+
           {error && (
-            <div className="p-3 rounded-xl bg-red-500/10 text-red-700 text-sm">{error}</div>
+            <div className="p-3 rounded-xl bg-red-500/10 text-red-700 text-sm" role="alert">
+              {error}
+            </div>
           )}
 
           <div className="flex flex-wrap gap-3 justify-end">
@@ -218,12 +279,12 @@ export default function CartView({ locale, stripeConfigured }: Props) {
             </button>
             <button
               type="submit"
-              disabled={pending}
-              className="px-7 py-2.5 rounded-full bg-[var(--color-accent)] text-white text-sm font-semibold disabled:opacity-50"
+              disabled={pending || !allConsented}
+              aria-disabled={pending || !allConsented}
+              title={!allConsented ? dict.must_accept_legal : undefined}
+              className="px-7 py-2.5 rounded-full bg-[var(--color-accent)] text-white text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {pending
-                ? dict.in_progress
-                : `${stripeConfigured ? dict.pay : dict.test_order} → ${formatMoney(totalCents)}`}
+              {pending ? dict.in_progress : `${dict.pay_button_label} → ${formatMoney(totalCents)}`}
             </button>
           </div>
         </form>
@@ -269,6 +330,34 @@ function Field({ label, name, type = 'text', required, dict }: FieldProps) {
         required={required}
         className="w-full px-3 py-2 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] text-sm"
       />
+    </label>
+  );
+}
+
+interface ConsentBoxProps {
+  id: string;
+  checked: boolean;
+  onChange: (v: boolean) => void;
+  label: React.ReactNode;
+}
+
+function ConsentBox({ id, checked, onChange, label }: ConsentBoxProps) {
+  return (
+    <label
+      htmlFor={id}
+      className="flex gap-2 items-start cursor-pointer p-2 rounded-xl hover:bg-[var(--color-accent)]/5 text-sm"
+    >
+      <input
+        id={id}
+        type="checkbox"
+        checked={checked}
+        onChange={(e) => onChange(e.target.checked)}
+        required
+        className="mt-1 w-5 h-5 flex-shrink-0"
+      />
+      <span className="flex-1 leading-relaxed">
+        {label} <span className="text-red-500">*</span>
+      </span>
     </label>
   );
 }

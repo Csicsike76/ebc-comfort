@@ -139,14 +139,14 @@ import PaletteSync from '@/components/PaletteSync';
 
 const manrope = Manrope({
   variable: '--font-manrope',
-  subsets: ['latin', 'latin-ext'],
+  subsets: ['latin', 'latin-ext', 'cyrillic', 'cyrillic-ext', 'greek'],
   weight: ['300', '400', '500', '600', '700', '800'],
   display: 'swap',
 });
 
 const jetbrainsMono = JetBrains_Mono({
   variable: '--font-jetbrains-mono',
-  subsets: ['latin', 'latin-ext'],
+  subsets: ['latin', 'latin-ext', 'cyrillic', 'cyrillic-ext', 'greek'],
   weight: ['400', '500', '700'],
   display: 'swap',
 });
