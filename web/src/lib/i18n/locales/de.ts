@@ -56,6 +56,68 @@ export const de = {
       },
       note: 'Wir empfehlen 20-30 Minuten pro Anwendung. Automatischer Überhitzungsschutz immer aktiv.',
     },
+    pricing: {
+      badge: 'Ein Preis, alles inklusive',
+      subline: 'Einmalkauf · kostenloser EU-weiter Versand',
+      cta: 'Jetzt bestellen',
+      includes: {
+        item: 'EBC Comfort beheizbares Pad',
+        accu: 'USB-C-Kabel + 8000 mAh Akku',
+        silicone: '2 austauschbare medizinische Silikon-Einsätze',
+        packaging: 'Diskrete Verpackung, kostenloser Versand',
+        refund: '30-Tage Geld-zurück-Garantie',
+        warranty: '1 Jahr Herstellergarantie',
+      },
+    },
+    testimonials: {
+      title: 'Was Kunden sagen',
+      items: {
+        kriszta: {
+          quote: 'Tut genau das, was sie versprechen. 60°C ist perfekt für mich, und 8 Stunden Laufzeit reichen locker für einen Arbeitstag.',
+          author: 'Kristina, 34 · Budapest',
+        },
+        beata: {
+          quote: 'Diskret, leise und so bequem, dass ich vergesse, dass es da ist. Hat mich auf Reisen mehrfach gerettet.',
+          author: 'Beatrix, 41 · Debrecen',
+        },
+        zsofi: {
+          quote: 'Der Silikon-Einsatz fühlt sich angenehm an. USB-C lädt schnell, und die 5 Stufen sind wirklich unterschiedlich. Den Preis wert.',
+          author: 'Sophia, 29 · Szeged',
+        },
+      },
+    },
+    faq: {
+      title: 'Häufige Fragen',
+      items: {
+        charge: {
+          q: 'Wie lange dauert eine volle Ladung?',
+          a: 'Der 8000-mAh-Akku lädt per USB-C in etwa 3 Stunden vollständig auf. Eine volle Ladung reicht für bis zu 10 Stunden bei niedriger Stufe.',
+        },
+        sleep: {
+          q: 'Kann ich damit schlafen?',
+          a: 'Wir empfehlen die Nutzung während des Schlafs nicht. Der Überhitzungsschutz ist aktiv, die empfohlene Dauer beträgt 20-30 Minuten pro Anwendung.',
+        },
+        washable: {
+          q: 'Ist es waschbar? Sind die Einsätze austauschbar?',
+          a: 'Ja. Der medizinische Silikon-Einsatz (ISO 10993 biokompatibel) ist austauschbar und kann mit lauwarmem Wasser von Hand gewaschen werden. Das Paket enthält 2 Ersatz-Einsätze.',
+        },
+        wellness: {
+          q: 'Wellness- oder Medizinprodukt?',
+          a: 'EBC Comfort ist ein Wellness-Gerät für Komfortwärme. KEIN Medizinprodukt, ersetzt keine ärztliche Diagnose oder Behandlung. Bei gesundheitlichen Anliegen wende dich an eine Fachkraft.',
+        },
+        refund: {
+          q: 'Wie funktioniert die 30-Tage-Garantie?',
+          a: 'Wenn du innerhalb von 30 Tagen nicht zufrieden bist, sende es zurück und wir erstatten den vollen Preis. Wir übernehmen die Rücksendekosten. Plus 1 Jahr Herstellergarantie für Werksmängel.',
+        },
+      },
+    },
+    trust: {
+      ce: 'CE-zertifiziert',
+      iso: 'ISO 10993 biokompatibel',
+      refund: 'Tage Garantie',
+      simplepay: 'SimplePay',
+      eu: 'EU-Versand',
+    },
   },
   chat: {
     title: 'Sprich mit uns',

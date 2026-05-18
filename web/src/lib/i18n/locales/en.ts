@@ -56,6 +56,68 @@ export const en = {
       },
       note: 'We recommend 20-30 minutes per session. Auto-overheat protection always has your back.',
     },
+    pricing: {
+      badge: 'One price, all included',
+      subline: 'One-time purchase · free EU-wide shipping',
+      cta: 'Order now',
+      includes: {
+        item: 'EBC Comfort heated pad',
+        accu: 'USB-C cable + 8000 mAh battery',
+        silicone: '2 replaceable medical-grade silicone inserts',
+        packaging: 'Discreet packaging, free shipping',
+        refund: '30-day money-back guarantee',
+        warranty: '1-year manufacturer warranty',
+      },
+    },
+    testimonials: {
+      title: 'What people say',
+      items: {
+        kriszta: {
+          quote: 'Does exactly what they promise. 60°C is perfect for me, and the 8-hour runtime is more than enough for a workday.',
+          author: 'Kristina, 34 · Budapest',
+        },
+        beata: {
+          quote: 'Discreet, quiet, and so comfortable I forget it is there. Saved me multiple times while travelling.',
+          author: 'Beatrice, 41 · Debrecen',
+        },
+        zsofi: {
+          quote: 'The silicone insert feels great. USB-C charges fast, and the 5 levels really do differ. Worth the price.',
+          author: 'Sophie, 29 · Szeged',
+        },
+      },
+    },
+    faq: {
+      title: 'Frequently asked questions',
+      items: {
+        charge: {
+          q: 'How long is a full charge?',
+          a: 'The 8000 mAh battery fully charges in about 3 hours via USB-C. A full charge gives up to 10 hours at low intensity.',
+        },
+        sleep: {
+          q: 'Can I sleep with it?',
+          a: 'We do not recommend using it during sleep. Auto-overheat protection is active, but the recommended session is 20-30 minutes.',
+        },
+        washable: {
+          q: 'Is it washable? Are the silicone inserts replaceable?',
+          a: 'Yes. The medical-grade silicone (ISO 10993 biocompatible) inserts are replaceable and can be hand-washed with lukewarm water. The package includes 2 spare inserts.',
+        },
+        wellness: {
+          q: 'What does wellness vs medical device mean?',
+          a: 'EBC Comfort is a wellness device designed for comfort warmth. It is NOT a medical device and does not replace medical diagnosis or treatment. Consult a healthcare professional for health concerns.',
+        },
+        refund: {
+          q: 'How does the 30-day guarantee work?',
+          a: 'If you are not satisfied within 30 days, send it back and we refund the full price. We cover the return shipping. Plus a 1-year manufacturer warranty for factory defects.',
+        },
+      },
+    },
+    trust: {
+      ce: 'CE certified',
+      iso: 'ISO 10993 biocompatible',
+      refund: 'Day guarantee',
+      simplepay: 'SimplePay',
+      eu: 'EU shipping',
+    },
   },
   chat: {
     title: 'Talk to us',

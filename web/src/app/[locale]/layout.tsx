@@ -5,6 +5,11 @@ import { notFound } from 'next/navigation';
 import '../globals.css';
 import ThemeBootstrap from '@/components/ThemeBootstrap';
 import PaletteBootstrap from '@/components/PaletteBootstrap';
+import GlobeLoader from '@/components/GlobeLoader';
+import CornerGlobes from '@/components/CornerGlobes';
+import AmbientParticles from '@/components/AmbientParticles';
+import ReadingProgress from '@/components/ReadingProgress';
+import BackToTop from '@/components/BackToTop';
 
 const manrope = Manrope({
   variable: '--font-manrope',
@@ -58,7 +63,14 @@ export default async function LocaleLayout({ children, params }: Props) {
         <ThemeBootstrap />
         <PaletteBootstrap />
       </head>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <GlobeLoader />
+        <CornerGlobes />
+        <AmbientParticles count={14} />
+        <ReadingProgress />
+        {children}
+        <BackToTop />
+      </body>
     </html>
   );
 }
