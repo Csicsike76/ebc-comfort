@@ -2,6 +2,7 @@ import { redirect, notFound } from 'next/navigation';
 import { isValidLocale, Locale } from '@/lib/i18n/config';
 import { getSupabaseServerClient } from '@/lib/supabase/server';
 import PalettePicker from '@/components/admin/PalettePicker';
+import DevControls from '@/components/admin/DevControls';
 
 interface Props {
   params: Promise<{ locale: string }>;
@@ -31,9 +32,13 @@ export default async function AdminSettings({ params }: Props) {
 
       <h2 className="text-lg font-bold mb-2">Színpaletta</h2>
       <p className="text-sm text-[var(--color-muted)] mb-6 max-w-2xl">
-        29 paletta forrás: Pantone CoTY · PPG · WGSN · Radix UI · Vercel · Vistaprint 2026 trends. Kattints egyre → live preview, mentés a böngészőben.
+        35 paletta forrás: Pantone CoTY · PPG · WGSN · Radix UI · Vercel · Vistaprint 2026 trends · Magyar zászló · Rio · Sunset Beach · Botanical · Carnival · Mineral. Kattints egyre → live preview, mentés a böngészőben.
       </p>
       <PalettePicker />
+
+      <div className="mt-12">
+        <DevControls />
+      </div>
     </div>
   );
 }
