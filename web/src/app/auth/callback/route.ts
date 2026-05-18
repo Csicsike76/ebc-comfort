@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { getSupabaseServerClient } from '@/lib/supabase/server';
 import { sanitizeNext } from '@/lib/auth-safe';
 
@@ -12,11 +12,16 @@ export async function GET(req: NextRequest) {
     await supa.auth.exchangeCodeForSession(code);
   }
 
-  // Build redirect target explicitly so Next.js / Netlify does NOT preserve
-  // the original `?next=...` query (which would echo an attacker-controlled
-  // value back into the Location header even though the path itself is
-  // already sanitized).
-  const target = new URL(next, reqUrl.origin);
-  target.search = '';
-  return NextResponse.redirect(target);
+  // Build the redirect target by hand so neither Next.js nor the Netlify
+  // adapter can echo the original `?next=https://evil.example` query back
+  // into the Location header (which would surface in security scanners
+  // even though the path itself is already sanitized).
+  const target = `${reqUrl.origin}${next}`;
+  return new Response(null, {
+    status: 307,
+    headers: {
+      Location: target,
+      'Cache-Control': 'no-store',
+    },
+  });
 }
