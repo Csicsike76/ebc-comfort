@@ -113,7 +113,7 @@ export const hu = {
     },
     trust: {
       ce: 'CE tanúsítvány',
-      iso: 'ISO 10993 biokompatibilis',
+      iso: 'Bőrbarát anyag',
       refund: 'Napos garancia',
       simplepay: 'SimplePay',
       eu: 'EU shipping',

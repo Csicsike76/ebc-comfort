@@ -113,7 +113,7 @@ export const en = {
     },
     trust: {
       ce: 'CE certified',
-      iso: 'ISO 10993 biocompatible',
+      iso: 'Skin-friendly material',
       refund: 'Day guarantee',
       simplepay: 'SimplePay',
       eu: 'EU shipping',

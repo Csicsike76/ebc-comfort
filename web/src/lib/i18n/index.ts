@@ -1,6 +1,18 @@
 import { hu } from './locales/hu';
 import { en } from './locales/en';
 import { de } from './locales/de';
+import { fr } from './locales/fr';
+import { it } from './locales/it';
+import { es } from './locales/es';
+import { pl } from './locales/pl';
+import { ro } from './locales/ro';
+import { nl } from './locales/nl';
+import { pt } from './locales/pt';
+import { cs } from './locales/cs';
+import { sk } from './locales/sk';
+import { sv } from './locales/sv';
+import { da } from './locales/da';
+import { fi } from './locales/fi';
 import { Locale, DEFAULT_LOCALE, FALLBACK_LOCALE } from './config';
 
 type Dict = typeof hu;
@@ -9,7 +21,18 @@ const dictionaries: Partial<Record<Locale, Dict>> = {
   hu,
   en: en as Dict,
   de: de as Dict,
-  // Other locales fall back to EN for now; will be populated later
+  fr: fr as Dict,
+  it: it as Dict,
+  es: es as Dict,
+  pl: pl as Dict,
+  ro: ro as Dict,
+  nl: nl as Dict,
+  pt: pt as Dict,
+  cs: cs as Dict,
+  sk: sk as Dict,
+  sv: sv as Dict,
+  da: da as Dict,
+  fi: fi as Dict,
 };
 
 export function getDict(locale: Locale): Dict {

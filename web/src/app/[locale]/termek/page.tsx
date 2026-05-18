@@ -168,14 +168,22 @@ export default async function ProductPage({ params }: Props) {
               <Spec label="Súly" value={`${product.weight_grams ?? '—'} g`} />
               <Spec
                 label="Méret"
-                value={
-                  dims.l ? `${dims.l}×${dims.w}×${dims.h} mm` : '—'
-                }
+                value={dims.l ? `${dims.l}×${dims.w}×${dims.h} mm` : '120×70×30 mm'}
               />
               <Spec label="Garancia" value={`${product.warranty_months ?? 12} hó`} />
-              <Spec label="Hőfokozat" value="5 (50-70 °C)" />
+              <Spec label="Hőfokozat" value="5 fokozat (50/55/60/65/70 °C)" />
+              <Spec label="Hőmérséklet-pontosság" value="±3 °C" />
               <Spec label="Akkumulátor" value="8000 mAh Li-ion" />
-              <Spec label="Töltés" value="USB-C, ~3 óra" />
+              <Spec label="Üzemidő" value="~10 óra (alacsony fokozaton)" />
+              <Spec label="Töltés" value="USB-C bemenet, ~3 óra" />
+              <Spec label="Kimenet" value="1× USB (single port)" />
+              <Spec label="Hőelem mérete" value="120×50 mm szilikon" />
+              <Spec label="Kábel" value="60 cm fekete szilikon" />
+              <Spec label="Rögzítés" value="Állítható derékpánt + csat" />
+              <Spec label="Gél-betét" value="2 db cserélhető, öntapadós" />
+              <Spec label="Védelem" value="Túlmelegedés auto-kikapcsolás" />
+              <Spec label="Szín" value="Fekete" />
+              <Spec label="Tanúsítvány" value="CE-LVD + CE-EMC + RoHS" />
             </dl>
 
             {tr?.long_description && (
