@@ -17,6 +17,9 @@ const TABS = [
   { key: 'articles', label: 'Edukáció', href: '/articles' },
   { key: 'donations', label: 'Donations', href: '/donations' },
   { key: 'chat', label: 'AI chat', href: '/chat' },
+  { key: 'calls', label: 'Hívások', href: '/calls' },
+  { key: 'marketing', label: 'Marketing', href: '/marketing' },
+  { key: 'users', label: 'Felhasználók', href: '/users' },
   { key: 'i18n', label: 'Fordítások', href: '/i18n' },
   { key: 'settings', label: 'Beállítások', href: '/settings' },
 ];

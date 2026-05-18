@@ -3,6 +3,8 @@ import LocaleSwitcher from '@/components/LocaleSwitcher';
 import ThemeToggle from '@/components/ThemeToggle';
 import AiChatWidget from '@/components/AiChatWidget';
 import CartIndicator from '@/components/CartIndicator';
+import MarketingPixels from '@/components/MarketingPixels';
+import UtmTracker from '@/components/UtmTracker';
 import { CartProvider } from '@/lib/cart/CartContext';
 import { Locale } from '@/lib/i18n/config';
 import { getDict, tt } from '@/lib/i18n';
@@ -18,6 +20,8 @@ export default function PublicShell({ locale, children }: Props) {
 
   return (
     <CartProvider>
+      <MarketingPixels />
+      <UtmTracker />
       <div className="flex flex-col min-h-screen">
         <header className="app-header">
           <div className="max-w-6xl mx-auto safe-x py-4 flex items-center justify-between gap-4">
