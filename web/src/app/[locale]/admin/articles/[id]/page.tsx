@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { requireAdmin, formatDateTime } from '@/lib/admin/guard';
+import { findForbiddenKeywords } from '@/lib/compliance-keywords';
 import { SUPPORTED_LOCALES } from '@/lib/i18n/config';
 import ReindexButton from '@/components/admin/ReindexButton';
 
@@ -51,6 +52,26 @@ export default async function EditArticle({ params }: Props) {
     const featured = String(formData.get('featured_image_url') ?? '') || null;
     if (!slug) throw new Error('slug kötelező');
     if (!(STATUSES as readonly string[]).includes(status)) throw new Error('rossz státusz');
+    // Compliance gate: block publish if any translation carries a forbidden
+    // medical claim. Drafts are not blocked — review happens before publish.
+    if (status === 'published') {
+      const { data: trs } = await s
+        .from('article_translations')
+        .select('title, excerpt, body_markdown, meta_title, meta_description')
+        .eq('article_id', aid);
+      const hits = new Set<string>();
+      for (const tr of (trs ?? []) as Partial<TranslationRow>[]) {
+        const text = [tr.title, tr.excerpt, tr.body_markdown, tr.meta_title, tr.meta_description]
+          .filter(Boolean)
+          .join('\n');
+        for (const kw of findForbiddenKeywords(text)) hits.add(kw);
+      }
+      if (hits.size > 0) {
+        throw new Error(
+          `Publikálás blokkolva — tiltott orvosi kifejezés(ek): ${[...hits].join(', ')}. Javítsd a fordításokat, majd próbáld újra.`,
+        );
+      }
+    }
     const patch: Record<string, unknown> = {
       slug,
       status,
