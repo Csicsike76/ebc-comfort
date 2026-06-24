@@ -1,7 +1,5 @@
-import Counter from '@/components/Counter';
 import { getDict, tt } from '@/lib/i18n';
 import { Locale } from '@/lib/i18n/config';
-import { bcp47 } from '@/lib/format';
 
 const ITEM_KEYS = ['item', 'accu', 'silicone', 'packaging', 'refund', 'warranty'] as const;
 
@@ -21,12 +19,9 @@ export default function PricingCard({ locale, href }: Props) {
         ✨ {t('home.pricing.badge')}
       </span>
       <div className="pricing-price">
-        <Counter
-          from={999}
-          target={100}
-          durationMs={1600}
-          locale={bcp47(locale)}
-        /> €
+        {/* ponytail: honest static launch price — no fake €999→€100 anchor.
+            Transactional price is enforced server-side from DB at checkout. */}
+        100 €
       </div>
       <p className="text-sm text-[var(--color-muted)]">{t('home.pricing.subline')}</p>
       <ul className="pricing-includes">
