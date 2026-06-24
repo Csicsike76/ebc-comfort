@@ -158,6 +158,36 @@ serve(async (req: Request) => {
   const supa = getServiceClient();
   const userId = await getUserIdFromRequest(req);
 
+  // --- rate limit (cost-DoS guard: each request = one paid Anthropic call) ---
+  // Bucket by the most specific caller identity, so logged-in users and distinct anon
+  // sessions each get their own budget. IP is only a last-resort bucket: legit traffic
+  // arrives via the Next /api/chat proxy and shares that server's IP, so per-IP limiting
+  // here would throttle everyone. The global bucket is the hard budget ceiling.
+  const xff = (req.headers.get('x-forwarded-for') ?? '').split(',')[0].trim();
+  const callerBucket = userId
+    ? `chat:user:${userId}`
+    : body.session_token
+      ? `chat:sess:${body.session_token}`
+      : `chat:ip:${xff || 'unknown'}`;
+  const rateLimits: Array<[string, number, number]> = [
+    [callerBucket, 15, 60],    // 15 requests / 60s per caller
+    ['chat:global', 600, 60],  // 600 requests / 60s total — Anthropic budget circuit-breaker
+  ];
+  for (const [bucket, max, windowSecs] of rateLimits) {
+    const { data: allowed, error: rlError } = await supa.rpc('check_rate_limit', {
+      p_bucket: bucket,
+      p_max: max,
+      p_window_secs: windowSecs,
+    });
+    // ponytail: fail-open if the limiter itself errors — a broken limiter must not take
+    // chat down. The error is logged; if it persists it shows up in function logs.
+    if (rlError) {
+      console.error('rate-limit rpc failed (fail-open)', rlError);
+      break;
+    }
+    if (allowed === false) return errorResponse('Rate limit exceeded, please slow down', 429);
+  }
+
   // --- get or create conversation ---
   let conversationId = body.conversation_id;
   if (!conversationId) {
@@ -172,9 +202,26 @@ serve(async (req: Request) => {
       .single();
     if (error || !data) {
       console.error('chat_conversations insert failed', error);
-      return errorResponse('Failed to create conversation', 500, error);
+      return errorResponse('Failed to create conversation', 500);
     }
     conversationId = data.id;
+  } else {
+    // IDOR guard: getServiceClient() bypasses RLS, so a client-supplied
+    // conversation_id must be proven to belong to this caller before we read
+    // its history. Logged-in → user_id match; anonymous → session_token match.
+    const { data: conv, error } = await supa
+      .from('chat_conversations')
+      .select('user_id, session_token')
+      .eq('id', conversationId)
+      .single();
+    if (error || !conv) return errorResponse('Conversation not found', 404);
+    const ownsByUser = userId !== null && conv.user_id === userId;
+    const ownsBySession =
+      conv.user_id === null &&
+      typeof body.session_token === 'string' &&
+      body.session_token.length > 0 &&
+      conv.session_token === body.session_token;
+    if (!ownsByUser && !ownsBySession) return errorResponse('Forbidden', 403);
   }
 
   // --- fetch history ---
@@ -213,7 +260,7 @@ serve(async (req: Request) => {
   if (!anthropicRes.ok) {
     const detail = await anthropicRes.text();
     console.error('Anthropic API error', anthropicRes.status, detail);
-    return errorResponse('Anthropic API error', 502, detail);
+    return errorResponse('Anthropic API error', 502);
   }
 
   const completion = await anthropicRes.json();
