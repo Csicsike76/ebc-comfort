@@ -97,6 +97,8 @@ export default async function ProductPage({ params }: Props) {
           priceCents: product.base_price_cents,
           currency: product.currency,
           inStock: false,
+          freeShipping: product.base_price_cents >= 5000,
+          priceValidUntil: new Date(Date.now() + 365 * 864e5).toISOString().slice(0, 10),
         })}
       />
       <article className="max-w-6xl mx-auto safe-x py-12 sm:py-16">
