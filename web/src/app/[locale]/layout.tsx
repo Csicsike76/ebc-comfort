@@ -136,6 +136,7 @@ import AmbientParticles from '@/components/AmbientParticles';
 import ReadingProgress from '@/components/ReadingProgress';
 import BackToTop from '@/components/BackToTop';
 import PaletteSync from '@/components/PaletteSync';
+import ServiceWorkerRegister from '@/components/ServiceWorkerRegister';
 
 const manrope = Manrope({
   variable: '--font-manrope',
@@ -169,6 +170,18 @@ export async function generateMetadata({
     description: meta.description,
     applicationName: 'EBC Comfort',
     manifest: '/manifest.json',
+    appleWebApp: {
+      capable: true,
+      title: 'EBC Comfort',
+      statusBarStyle: 'default',
+    },
+    icons: {
+      icon: [
+        { url: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+        { url: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
+      ],
+      apple: '/icons/apple-touch-icon.png',
+    },
     metadataBase: new URL(SITE),
     alternates: {
       canonical: `${SITE}/${loc}`,
@@ -236,6 +249,7 @@ export default async function LocaleLayout({ children, params }: Props) {
       </head>
       <body className="min-h-full flex flex-col">
         <PaletteSync />
+        <ServiceWorkerRegister />
         <GlobeLoader />
         <CornerGlobes />
         <AmbientParticles count={14} />

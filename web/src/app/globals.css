@@ -684,3 +684,76 @@ img, video, svg { max-width: 100%; height: auto; display: block; }
   .reading-progress { display: none; }
   html { scroll-behavior: auto; }
 }
+
+/* ===== Admin shell — Fázis 0 reskin (sidenav + solid stat cards) ===== */
+.admin-sidenav { background: var(--color-surface); border-right: 1px solid var(--color-border); }
+
+.admin-side-group {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-muted);
+  padding: 14px 14px 4px;
+}
+
+.admin-side-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  font-size: 13px;
+  color: var(--color-text);
+  border-left: 3px solid transparent;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.admin-side-item:hover { background: color-mix(in srgb, var(--color-accent) 8%, transparent); }
+
+.admin-side-item.is-active {
+  background: color-mix(in srgb, var(--color-accent) 14%, transparent);
+  color: var(--color-accent-2);
+  font-weight: 700;
+  border-left-color: var(--color-accent);
+}
+
+/* Metric stat card — admin = solid surface, NOT glass (readable, printable) */
+.stat-grid { display: grid; gap: 10px; }
+
+.stat {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  padding: 14px 16px;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.stat:hover { transform: translateY(-2px); border-color: var(--color-accent); }
+
+.stat--today { background: color-mix(in srgb, var(--color-accent) 7%, var(--color-surface)); }
+
+.stat-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-muted);
+  margin-bottom: 6px;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: 800;
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+}
+
+.stat--alarm .stat-value { color: #b4471f; }
+
+/* Admin subpages: solid cards + tables (no glass), reskins all 14 pages at once */
+.admin-scope .glass-card {
+  background: var(--color-surface);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: 1px solid var(--color-border);
+}
+.admin-scope table thead { background: color-mix(in srgb, var(--color-accent) 6%, transparent); }
+.admin-scope table th { font-weight: 700; }
+.admin-scope table tbody tr:hover { background: color-mix(in srgb, var(--color-accent) 4%, transparent); }

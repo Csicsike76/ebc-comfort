@@ -36,6 +36,21 @@ export default async function AdminMarketing({ params }: Props) {
     .order('created_at', { ascending: false })
     .limit(200);
 
+  // F2 ROAS: revenue attributed to each campaign via paid orders' utm_campaign.
+  const { data: attributed } = await supa
+    .from('orders')
+    .select('utm_campaign, total_cents')
+    .not('paid_at', 'is', null)
+    .not('utm_campaign', 'is', null);
+
+  const revByCampaign = new Map<string, { revenue: number; orders: number }>();
+  for (const o of (attributed ?? []) as { utm_campaign: string; total_cents: number }[]) {
+    const e = revByCampaign.get(o.utm_campaign) ?? { revenue: 0, orders: 0 };
+    e.revenue += o.total_cents ?? 0;
+    e.orders += 1;
+    revByCampaign.set(o.utm_campaign, e);
+  }
+
   async function createCampaign(formData: FormData) {
     'use server';
     const { locale: lp } = await params;
@@ -147,13 +162,18 @@ export default async function AdminMarketing({ params }: Props) {
               <th className="px-4 py-3 font-semibold">Csatorna</th>
               <th className="px-4 py-3 font-semibold">UTM</th>
               <th className="px-4 py-3 font-semibold text-right">Költés</th>
+              <th className="px-4 py-3 font-semibold text-right">Bevétel</th>
+              <th className="px-4 py-3 font-semibold text-right">ROAS</th>
               <th className="px-4 py-3 font-semibold text-right">Konverzió</th>
               <th className="px-4 py-3 font-semibold">Indulás</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
-            {rows.map((c) => (
+            {rows.map((c) => {
+              const revenue = c.utm_campaign ? (revByCampaign.get(c.utm_campaign)?.revenue ?? 0) : 0;
+              const roas = c.spent_cents && c.spent_cents > 0 ? revenue / c.spent_cents : null;
+              return (
               <tr key={c.id} className="border-t border-[var(--color-border)]">
                 <td className="px-4 py-3">
                   <div className="font-semibold">{c.name}</div>
@@ -166,6 +186,14 @@ export default async function AdminMarketing({ params }: Props) {
                 <td className="px-4 py-3 text-right font-mono">
                   {c.spent_cents != null
                     ? `${formatMoneyCents(c.spent_cents)} / ${c.budget_cents != null ? formatMoneyCents(c.budget_cents) : '—'}`
+                    : '—'}
+                </td>
+                <td className="px-4 py-3 text-right font-mono">
+                  {revenue > 0 ? formatMoneyCents(revenue) : '—'}
+                </td>
+                <td className="px-4 py-3 text-right font-mono">
+                  {roas != null && revenue > 0
+                    ? <span className={roas >= 1 ? 'text-green-600' : 'text-red-600'}>{roas.toFixed(2)}×</span>
                     : '—'}
                 </td>
                 <td className="px-4 py-3 text-right">{c.conversions ?? 0}</td>
@@ -185,10 +213,11 @@ export default async function AdminMarketing({ params }: Props) {
                   </form>
                 </td>
               </tr>
-            ))}
+              );
+            })}
             {rows.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-4 py-10 text-center text-[var(--color-muted)]">
+                <td colSpan={9} className="px-4 py-10 text-center text-[var(--color-muted)]">
                   Még nincs kampány.
                 </td>
               </tr>

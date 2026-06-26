@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { requireAdmin, formatMoneyCents, formatDateTime } from '@/lib/admin/guard';
 import { sendShippingUpdate } from '@/lib/email/send';
+import { getBillingProvider } from '@/lib/billing/provider';
 
 interface Props {
   params: Promise<{ locale: string; id: string }>;
@@ -14,6 +15,19 @@ interface OrderItemRow {
   unit_price_cents: number;
   line_total_cents: number;
   products: { sku: string; slug: string } | null;
+}
+
+interface InvoiceRow {
+  id: string;
+  invoice_number: string | null;
+  provider: string;
+  status: string;
+  reason: string | null;
+  gross_cents: number;
+  currency: string;
+  pdf_url: string | null;
+  issued_at: string | null;
+  created_at: string;
 }
 
 interface OrderDetail {
@@ -66,6 +80,13 @@ export default async function AdminOrderDetail({ params }: Props) {
   if (!orderData) notFound();
   const order = orderData as unknown as OrderDetail;
 
+  const { data: invoiceRows } = await supa
+    .from('invoices')
+    .select('id, invoice_number, provider, status, reason, gross_cents, currency, pdf_url, issued_at, created_at')
+    .eq('order_id', id)
+    .order('created_at', { ascending: false });
+  const invoices = (invoiceRows ?? []) as InvoiceRow[];
+
   async function updateOrder(formData: FormData) {
     'use server';
     const { locale: lp, id: oid } = await params;
@@ -113,6 +134,59 @@ export default async function AdminOrderDetail({ params }: Props) {
       }
     }
 
+    revalidatePath(`/${lp}/admin/orders/${oid}`);
+  }
+
+  async function issueInvoiceAction() {
+    'use server';
+    const { locale: lp, id: oid } = await params;
+    const { supa: s, userId } = await requireAdmin(lp);
+    const { data: od } = await s
+      .from('orders')
+      .select('order_number, currency, subtotal_cents, vat_cents, total_cents, shipping_address, profiles:profiles!orders_user_id_fkey ( full_name )')
+      .eq('id', oid)
+      .single();
+    if (!od) throw new Error('order not found');
+    const o = od as unknown as {
+      order_number: string;
+      currency: string;
+      subtotal_cents: number;
+      vat_cents: number;
+      total_cents: number;
+      shipping_address: { name?: string; street?: string; city?: string; postcode?: string; country?: string } | null;
+      profiles: { full_name: string | null } | null;
+    };
+    const buyerName = o.profiles?.full_name ?? o.shipping_address?.name ?? 'Vásárló';
+    const res = await getBillingProvider().issueInvoice({
+      orderId: oid,
+      orderNumber: o.order_number,
+      netCents: o.subtotal_cents,
+      vatCents: o.vat_cents,
+      grossCents: o.total_cents,
+      currency: o.currency,
+      buyerName,
+      buyerAddress: o.shipping_address,
+      items: [],
+    });
+    const status = res.ok ? 'issued' : res.reason === 'provider_error' ? 'failed' : 'blocked';
+    const { error: e } = await s.from('invoices').insert({
+      order_id: oid,
+      provider: res.provider,
+      invoice_number: res.invoiceNumber ?? null,
+      external_id: res.externalId ?? null,
+      status,
+      reason: res.ok ? null : res.reason,
+      net_cents: o.subtotal_cents,
+      vat_cents: o.vat_cents,
+      gross_cents: o.total_cents,
+      currency: o.currency,
+      buyer_name: buyerName,
+      buyer_address: o.shipping_address,
+      pdf_url: res.pdfUrl ?? null,
+      issued_at: res.ok ? new Date().toISOString() : null,
+      created_by: userId,
+    });
+    if (e) throw new Error(e.message);
     revalidatePath(`/${lp}/admin/orders/${oid}`);
   }
 
@@ -197,6 +271,58 @@ export default async function AdminOrderDetail({ params }: Props) {
       </section>
 
       <section className="glass-card p-5">
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="font-bold">Számlázás</h2>
+          <form action={issueInvoiceAction}>
+            <button
+              type="submit"
+              className="px-4 py-2 rounded-full bg-[var(--color-accent)] text-white text-sm font-semibold"
+            >
+              Számla kiállítása
+            </button>
+          </form>
+        </div>
+        {invoices.length === 0 ? (
+          <p className="text-sm text-[var(--color-muted)]">Még nincs számla ehhez a rendeléshez.</p>
+        ) : (
+          <table className="w-full text-sm">
+            <thead className="text-left text-xs uppercase text-[var(--color-muted)]">
+              <tr>
+                <th className="py-2">Szám</th>
+                <th className="py-2">Szolgáltató</th>
+                <th className="py-2">Állapot</th>
+                <th className="py-2 text-right">Bruttó</th>
+                <th className="py-2">Dátum</th>
+              </tr>
+            </thead>
+            <tbody>
+              {invoices.map((inv) => (
+                <tr key={inv.id} className="border-t border-[var(--color-border)]">
+                  <td className="py-2 font-mono text-xs">
+                    {inv.pdf_url ? (
+                      <a href={inv.pdf_url} className="text-[var(--color-accent)] hover:underline" target="_blank" rel="noopener">
+                        {inv.invoice_number ?? 'PDF'}
+                      </a>
+                    ) : (
+                      inv.invoice_number ?? '—'
+                    )}
+                  </td>
+                  <td className="py-2 text-xs">{inv.provider}</td>
+                  <td className="py-2"><InvoiceStatus status={inv.status} reason={inv.reason} /></td>
+                  <td className="py-2 text-right font-mono">{formatMoneyCents(inv.gross_cents, inv.currency)}</td>
+                  <td className="py-2 text-xs text-[var(--color-muted)]">{formatDateTime(inv.issued_at ?? inv.created_at)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+        <p className="text-xs text-[var(--color-muted)] mt-3">
+          A számlázó aktiválásához <code>SZAMLAZZHU_AGENT_KEY</code> + Kft/ÁFA-szám kell. Addig a számla
+          <strong> „blokkolt”</strong> állapotban rögzül — a folyamat végpontig bekötve.
+        </p>
+      </section>
+
+      <section className="glass-card p-5">
         <h2 className="font-bold mb-3">Státusz + követés</h2>
         <form action={updateOrder} className="space-y-3 text-sm">
           <label className="block">
@@ -268,5 +394,31 @@ function Row({ label, value, bold }: { label: string; value: string; bold?: bool
       <span className="text-[var(--color-muted)]">{label}</span>
       <span className="font-mono">{value}</span>
     </div>
+  );
+}
+
+function InvoiceStatus({ status, reason }: { status: string; reason: string | null }) {
+  const label: Record<string, string> = {
+    issued: 'Kiállítva',
+    blocked: 'Blokkolt',
+    failed: 'Hiba',
+    draft: 'Vázlat',
+    storno: 'Sztornó',
+  };
+  const reasonLabel: Record<string, string> = {
+    config_missing: 'nincs kulcs/Kft',
+    not_live: 'nincs élesítve',
+    not_implemented: 'nincs bekötve',
+    provider_error: 'szolgáltató-hiba',
+  };
+  const color =
+    status === 'issued' ? '#16a34a' : status === 'failed' ? '#dc2626' : 'var(--color-muted)';
+  return (
+    <span style={{ color }}>
+      {label[status] ?? status}
+      {reason && (
+        <span className="text-xs text-[var(--color-muted)]"> · {reasonLabel[reason] ?? reason}</span>
+      )}
+    </span>
   );
 }

@@ -25,6 +25,23 @@ interface ShippingAddress {
   country: string;
 }
 
+// Pull utm_campaign/utm_source from the `ebc_utm` cookie set by UtmTracker.
+// Fail-open: any parse error → no attribution, never throws into checkout.
+function readUtmAttribution(req: Request): { utm_campaign: string | null; utm_source: string | null } {
+  const empty = { utm_campaign: null, utm_source: null };
+  try {
+    const cookie = req.headers.get('cookie');
+    if (!cookie) return empty;
+    const m = cookie.split('; ').find((c) => c.startsWith('ebc_utm='));
+    if (!m) return empty;
+    const raw = JSON.parse(decodeURIComponent(m.slice('ebc_utm='.length))) as Record<string, unknown>;
+    const cap = (v: unknown) => (typeof v === 'string' && v ? v.slice(0, 200) : null);
+    return { utm_campaign: cap(raw.utm_campaign), utm_source: cap(raw.utm_source) };
+  } catch {
+    return empty;
+  }
+}
+
 export async function POST(req: Request) {
   let payload: { locale: string; items: CheckoutItem[]; shipping_address: ShippingAddress };
   try {
@@ -126,6 +143,11 @@ export async function POST(req: Request) {
   // Auth (optional — guest checkout allowed)
   const { data: { user } } = await userClient.auth.getUser();
 
+  // Campaign attribution (F2 ROAS): the `ebc_utm` cookie holds a consent-gated
+  // JSON payload written by UtmTracker. Best-effort + fail-open — a malformed or
+  // absent cookie must never block a purchase. Untrusted text → length-capped.
+  const attribution = readUtmAttribution(req);
+
   const { data: orderRow, error: orderErr } = await admin
     .from('orders')
     .insert({
@@ -140,6 +162,8 @@ export async function POST(req: Request) {
       shipping_method: 'eu-standard',
       billing_phone: shipping_address.phone ?? null,
       shipping_phone: shipping_address.phone ?? null,
+      utm_campaign: attribution.utm_campaign,
+      utm_source: attribution.utm_source,
     })
     .select('id, order_number')
     .single();

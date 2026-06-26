@@ -1,5 +1,5 @@
 'use client';
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { getSupabaseBrowserClient } from '@/lib/supabase/client';
 import { Locale } from '@/lib/i18n/config';
@@ -10,44 +10,45 @@ interface Props {
   email: string;
 }
 
-interface Tab {
-  key: keyof AdminDict['nav']['tabs'];
-  href: string;
-}
+type TabKey = keyof AdminDict['nav']['tabs'];
+type GroupKey = keyof AdminDict['nav']['groups'];
+interface Item { key: TabKey; href: string; }
+interface Group { key: GroupKey; items: Item[]; }
 
-const TABS: Tab[] = [
-  { key: 'dashboard', href: '' },
-  { key: 'products', href: '/products' },
-  { key: 'orders', href: '/orders' },
-  { key: 'support', href: '/support' },
-  { key: 'articles', href: '/articles' },
-  { key: 'donations', href: '/donations' },
-  { key: 'chat', href: '/chat' },
-  { key: 'calls', href: '/calls' },
-  { key: 'marketing', href: '/marketing' },
-  { key: 'users', href: '/users' },
-  { key: 'i18n', href: '/i18n' },
-  { key: 'legal', href: '/legal-docs' },
-  { key: 'compliance', href: '/compliance' },
-  { key: 'settings', href: '/settings' },
+// ponytail: text-only items; add lucide icons later if the sidenav needs them
+const GROUPS: Group[] = [
+  { key: 'commerce', items: [
+    { key: 'dashboard', href: '' },
+    { key: 'products', href: '/products' },
+    { key: 'orders', href: '/orders' },
+    { key: 'support', href: '/support' },
+  ] },
+  { key: 'content', items: [
+    { key: 'articles', href: '/articles' },
+    { key: 'i18n', href: '/i18n' },
+    { key: 'legal', href: '/legal-docs' },
+  ] },
+  { key: 'ai', items: [
+    { key: 'chat', href: '/chat' },
+    { key: 'calls', href: '/calls' },
+  ] },
+  { key: 'growth', items: [
+    { key: 'analytics', href: '/analytics' },
+    { key: 'marketing', href: '/marketing' },
+    { key: 'donations', href: '/donations' },
+  ] },
+  { key: 'system', items: [
+    { key: 'users', href: '/users' },
+    { key: 'compliance', href: '/compliance' },
+    { key: 'settings', href: '/settings' },
+  ] },
 ];
 
 export default function AdminNav({ locale, email }: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
   const dict = getAdminDict(locale);
-
-  useEffect(() => {
-    function onDocClick(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
-    }
-    document.addEventListener('click', onDocClick);
-    return () => document.removeEventListener('click', onDocClick);
-  }, []);
-
-  useEffect(() => { setOpen(false); }, [pathname]);
 
   async function signOut() {
     const supa = getSupabaseBrowserClient();
@@ -55,88 +56,84 @@ export default function AdminNav({ locale, email }: Props) {
     router.push(`/${locale}`);
   }
 
-  const currentTab = TABS.find((t) => {
-    const full = `/${locale}/admin${t.href}`;
-    if (t.href === '') return pathname === full || pathname === `/${locale}/admin/`;
+  const isActive = (href: string) => {
+    const full = `/${locale}/admin${href}`;
+    if (href === '') return pathname === full || pathname === `/${locale}/admin/`;
     return pathname.startsWith(full);
-  }) ?? TABS[0];
+  };
 
-  const tabLabel = (key: Tab['key']) => dict.nav.tabs[key];
+  const renderNav = () => (
+    <>
+      {GROUPS.map((g) => (
+        <div key={g.key}>
+          <div className="admin-side-group">{dict.nav.groups[g.key]}</div>
+          {g.items.map((it) => (
+            <a
+              key={it.key}
+              href={`/${locale}/admin${it.href}`}
+              onClick={() => setOpen(false)}
+              className={`admin-side-item${isActive(it.href) ? ' is-active' : ''}`}
+            >
+              {dict.nav.tabs[it.key]}
+            </a>
+          ))}
+        </div>
+      ))}
+    </>
+  );
 
   return (
-    <header className="app-header">
-      <div className="max-w-7xl mx-auto safe-x py-3 flex items-center justify-between gap-3">
-        <a href={`/${locale}/admin`} className="flex items-center gap-2 font-bold flex-shrink-0">
-          <span className="inline-block w-7 h-7 rounded-full bg-[var(--color-accent)]" />
-          <span className="hidden sm:inline">{dict.nav.brand}</span>
-        </a>
-
-        {/* Desktop tabs */}
-        <nav className="hidden lg:flex items-center gap-1 text-sm">
-          {TABS.map((t) => {
-            const full = `/${locale}/admin${t.href}`;
-            const active = currentTab.key === t.key;
-            return (
-              <a
-                key={t.key}
-                href={full}
-                className={`px-3 py-1.5 rounded-full whitespace-nowrap transition-colors ${
-                  active
-                    ? 'bg-[var(--color-accent)] text-white'
-                    : 'hover:bg-[var(--color-accent)]/10'
-                }`}
-              >
-                {tabLabel(t.key)}
-              </a>
-            );
-          })}
-        </nav>
-
-        {/* Mobile dropdown trigger */}
-        <div ref={ref} className="relative lg:hidden flex-1">
+    <>
+      {/* Mobile top bar + drawer */}
+      <header className="lg:hidden app-header">
+        <div className="safe-x py-3 flex items-center justify-between gap-3">
+          <a href={`/${locale}/admin`} className="flex items-center gap-2 font-bold">
+            <span className="inline-block w-7 h-7 rounded-full bg-[var(--color-accent)]" />
+            <span>{dict.nav.brand}</span>
+          </a>
           <button
             onClick={() => setOpen((o) => !o)}
-            className="w-full flex items-center justify-between gap-2 px-3 py-1.5 rounded-full border border-[var(--color-border)] text-sm"
+            className="px-3 py-1.5 rounded-full border border-[var(--color-border)] text-sm"
             aria-haspopup="menu"
             aria-expanded={open}
+            aria-label={dict.nav.brand}
           >
-            <span>☰ {tabLabel(currentTab.key)}</span>
-            <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden>
-              <path d="M2 4l3 3 3-3" stroke="currentColor" strokeWidth="1.5" fill="none" />
-            </svg>
+            ☰
           </button>
-          {open && (
-            <ul
-              className="absolute left-0 right-0 top-full mt-2 rounded-2xl glass-card p-1 z-50 max-h-[60vh] overflow-y-auto"
-              role="menu"
-            >
-              {TABS.map((t) => (
-                <li key={t.key}>
-                  <a
-                    href={`/${locale}/admin${t.href}`}
-                    className={`block px-3 py-2 rounded-xl text-sm hover:bg-[var(--color-accent)]/10 ${
-                      currentTab.key === t.key ? 'font-bold text-[var(--color-accent-2)]' : ''
-                    }`}
-                    role="menuitem"
-                  >
-                    {tabLabel(t.key)}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          )}
         </div>
+        {open && (
+          <div className="px-1 pb-2 max-h-[70vh] overflow-y-auto border-t border-[var(--color-border)]">
+            {renderNav()}
+            <div className="px-3 py-3 flex items-center justify-between gap-2 text-xs">
+              <span className="text-[var(--color-muted)] truncate">{email}</span>
+              <button
+                onClick={signOut}
+                className="px-3 py-1.5 rounded-full border border-[var(--color-border)] flex-shrink-0"
+              >
+                {dict.nav.sign_out}
+              </button>
+            </div>
+          </div>
+        )}
+      </header>
 
-        <div className="flex items-center gap-2 text-xs flex-shrink-0">
-          <span className="hidden xl:inline text-[var(--color-muted)]">{email}</span>
+      {/* Desktop sidenav */}
+      <aside className="hidden lg:flex lg:flex-col lg:w-56 lg:flex-shrink-0 lg:sticky lg:top-0 lg:h-screen admin-sidenav overflow-y-auto">
+        <a href={`/${locale}/admin`} className="flex items-center gap-2 font-bold px-4 py-4 flex-shrink-0">
+          <span className="inline-block w-7 h-7 rounded-full bg-[var(--color-accent)]" />
+          <span>{dict.nav.brand}</span>
+        </a>
+        <nav className="flex-1 pb-4">{renderNav()}</nav>
+        <div className="flex-shrink-0 border-t border-[var(--color-border)] p-3 text-xs">
+          <div className="text-[var(--color-muted)] truncate mb-2">{email}</div>
           <button
             onClick={signOut}
-            className="px-3 py-1.5 rounded-full border border-[var(--color-border)] hover:border-[var(--color-accent)]"
+            className="w-full px-3 py-1.5 rounded-full border border-[var(--color-border)] hover:border-[var(--color-accent)]"
           >
             {dict.nav.sign_out}
           </button>
         </div>
-      </div>
-    </header>
+      </aside>
+    </>
   );
 }

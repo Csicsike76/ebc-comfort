@@ -38,9 +38,9 @@ export default async function AdminLayout({ children, params }: Props) {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="admin-scope lg:flex min-h-screen bg-[var(--color-bg)]">
       <AdminNav locale={locale} email={user.email ?? ''} />
-      <main className="flex-1">{children}</main>
+      <main className="flex-1 min-w-0">{children}</main>
     </div>
   );
 }
