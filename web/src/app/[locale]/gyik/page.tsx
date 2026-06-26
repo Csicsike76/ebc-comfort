@@ -3,6 +3,8 @@ import { pageAlternates } from '@/lib/seo';
 import { isValidLocale, Locale } from '@/lib/i18n/config';
 import PublicShell from '@/components/PublicShell';
 import { getPublicPagesDict } from '@/lib/i18n/public-pages';
+import { faqLd } from '@/lib/seo-jsonld';
+import JsonLd from '@/components/JsonLd';
 
 interface Props {
   params: Promise<{ locale: string }>;
@@ -21,6 +23,7 @@ export default async function FaqPage({ params }: Props) {
 
   return (
     <PublicShell locale={locale}>
+      <JsonLd data={faqLd(dict.items.map((f) => ({ q: f.q, a: f.a.replace(/\*\*/g, '') })))} />
       <div className="max-w-3xl mx-auto safe-x py-12 sm:py-16 space-y-4">
         <div className="glass-card p-7 sm:p-10 mb-4">
           <h1 className="text-3xl sm:text-4xl font-bold mb-3">{dict.title}</h1>

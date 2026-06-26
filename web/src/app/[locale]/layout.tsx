@@ -4,6 +4,8 @@ import { isValidLocale, type Locale } from '@/lib/i18n/config';
 import { notFound } from 'next/navigation';
 import { pageAlternates } from '@/lib/seo';
 import { getUi } from '@/lib/i18n/ui-strings';
+import { organizationLd, websiteLd } from '@/lib/seo-jsonld';
+import JsonLd from '@/components/JsonLd';
 import '../globals.css';
 
 const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://ebc-comfort.netlify.app';
@@ -242,6 +244,7 @@ export default async function LocaleLayout({ children, params }: Props) {
       <head>
         <ThemeBootstrap />
         <PaletteBootstrap />
+        <JsonLd data={[organizationLd(), websiteLd(loc)]} />
       </head>
       <body className="min-h-full flex flex-col">
         <PaletteSync />

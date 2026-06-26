@@ -1,0 +1,15 @@
+# EBC Comfort
+
+> EBC Comfort is a wellness brand: a discreet, portable heated comfort pad for lower-abdominal warmth (period / menstrual comfort, heat therapy). It is a wellness device, NOT a medical device. EBC also runs an NGO programme offering supported access for low-income women. The site is available in 24 EU languages.
+
+## Key pages
+- [Product](https://ebc-comfort.netlify.app/en/termek): the EBC Comfort heated pad — 5 levels (50-70 °C), 8000 mAh battery, USB-C charging; specs, price, ordering.
+- [Education](https://ebc-comfort.netlify.app/en/edukacio): source-backed articles on women's health, heat therapy, self-awareness.
+- [Support programme](https://ebc-comfort.netlify.app/en/tamogatas): NGO supported-access application + newsletter sign-up.
+- [About](https://ebc-comfort.netlify.app/en/rolunk): the EBC Wellness mission.
+- [FAQ](https://ebc-comfort.netlify.app/en/gyik): common questions about the product and programme.
+
+## Notes
+- Languages: hu, en, de, fr, it, es, pl, ro, nl, pt, cs, sk, sv, da, fi, bg, hr, et, el, ga, lv, lt, mt, sl. Replace `/en/` in any URL with another code for that language.
+- EBC Comfort is a wellness device, not a medical device. For health concerns, consult a doctor.
+- Sitemap: https://ebc-comfort.netlify.app/sitemap.xml

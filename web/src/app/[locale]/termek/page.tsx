@@ -3,6 +3,8 @@ import { pageAlternates } from '@/lib/seo';
 import { isValidLocale, Locale, FALLBACK_LOCALE } from '@/lib/i18n/config';
 import { getDict, tt } from '@/lib/i18n';
 import { getUi } from '@/lib/i18n/ui-strings';
+import { productLd } from '@/lib/seo-jsonld';
+import JsonLd from '@/components/JsonLd';
 import { getSupabaseServerClient } from '@/lib/supabase/server';
 import { formatMoneyCents } from '@/lib/admin/guard';
 import { renderMarkdown } from '@/lib/markdown';
@@ -84,6 +86,19 @@ export default async function ProductPage({ params }: Props) {
 
   return (
     <PublicShell locale={locale}>
+      <JsonLd
+        data={productLd({
+          locale,
+          path: '/termek',
+          name: tr?.name ?? 'EBC Comfort',
+          description: tr?.short_description ?? tr?.long_description ?? 'EBC Comfort wellness device.',
+          sku: product.sku,
+          image: (images?.[0] as ImageRow | undefined)?.url ?? null,
+          priceCents: product.base_price_cents,
+          currency: product.currency,
+          inStock: false,
+        })}
+      />
       <article className="max-w-6xl mx-auto safe-x py-12 sm:py-16">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
           <div className="glass-card p-3">
