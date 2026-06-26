@@ -1,9 +1,10 @@
 /**
- * Admin-only i18n. Public dictionary covers 24 EU locales; admin UI is a
- * back-office tool used by a small staff, so we maintain HU + EN only and
- * fall back any other locale to EN.
+ * Admin-only i18n. HU + EN are the source dictionaries maintained here; the
+ * other 22 EU locales live in ./admin-locales.ts (machine-translated from EN,
+ * QA-reviewed). Any locale still missing falls back to EN.
  */
 import type { Locale } from './config';
+import { adminLocales } from './admin-locales';
 
 const huAdmin = {
   nav: {
@@ -256,5 +257,7 @@ const enAdmin: typeof huAdmin = {
 export type AdminDict = typeof huAdmin;
 
 export function getAdminDict(locale: Locale): AdminDict {
-  return locale === 'hu' ? huAdmin : enAdmin;
+  if (locale === 'hu') return huAdmin;
+  if (locale === 'en') return enAdmin;
+  return adminLocales[locale] ?? enAdmin;
 }
