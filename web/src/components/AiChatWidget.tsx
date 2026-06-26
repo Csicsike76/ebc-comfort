@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { getDict, tt } from '@/lib/i18n';
+import { getUi } from '@/lib/i18n/ui-strings';
 import { Locale, DEFAULT_LOCALE } from '@/lib/i18n/config';
 
 interface Message {
@@ -16,6 +17,7 @@ interface Props {
 export default function AiChatWidget({ locale = DEFAULT_LOCALE }: Props) {
   const dict = getDict(locale);
   const t = (key: string) => tt(dict, key);
+  const ui = getUi(locale);
 
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -47,11 +49,11 @@ export default function AiChatWidget({ locale = DEFAULT_LOCALE }: Props) {
       });
       const data = await res.json();
       if (data.conversation_id) setConversationId(data.conversation_id);
-      setMessages((m) => [...m, { role: 'assistant', content: data.reply ?? '⚠️ Hiba.' }]);
+      setMessages((m) => [...m, { role: 'assistant', content: data.reply ?? `⚠️ ${ui.chat_error}` }]);
     } catch (e) {
       setMessages((m) => [
         ...m,
-        { role: 'assistant', content: '⚠️ Kapcsolat-hiba. Próbáld újra.' },
+        { role: 'assistant', content: `⚠️ ${ui.chat_connection_error}` },
       ]);
     } finally {
       setLoading(false);

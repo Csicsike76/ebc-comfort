@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { pageAlternates } from '@/lib/seo';
 import { isValidLocale, Locale, FALLBACK_LOCALE } from '@/lib/i18n/config';
 import { getDict, tt } from '@/lib/i18n';
+import { getUi } from '@/lib/i18n/ui-strings';
 import { getSupabaseServerClient } from '@/lib/supabase/server';
 import { formatMoneyCents } from '@/lib/admin/guard';
 import { renderMarkdown } from '@/lib/markdown';
@@ -51,9 +52,11 @@ export default async function ProductPage({ params }: Props) {
     return (
       <PublicShell locale={locale}>
         <div className="max-w-3xl mx-auto safe-x py-20 text-center">
-          <h1 className="text-2xl font-bold mb-3">Termék még nem elérhető</h1>
+          <h1 className="text-2xl font-bold mb-3">{getUi(locale).product_unavailable}</h1>
           <p className="text-sm text-[var(--color-muted)]">
-            Az EBC Comfort hamarosan megrendelhető lesz. Kérj értesítést a Támogatás oldalon.
+            <a href={`/${locale}/tamogatas`} className="text-[var(--color-accent-2)] underline">
+              {tt(getDict(locale), 'common.support')}
+            </a>
           </p>
         </div>
       </PublicShell>

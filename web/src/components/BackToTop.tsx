@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useRef } from 'react';
 
-export default function BackToTop({ ariaLabel = 'Vissza a tetejére' }: { ariaLabel?: string }) {
+export default function BackToTop({ ariaLabel = 'Back to top' }: { ariaLabel?: string }) {
   const ref = useRef<HTMLButtonElement>(null);
   useEffect(() => {
     function update() {

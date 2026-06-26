@@ -2,6 +2,8 @@
 import { useState } from 'react';
 import { useCart, CartItem } from '@/lib/cart/CartContext';
 import { Locale } from '@/lib/i18n/config';
+import { getUi } from '@/lib/i18n/ui-strings';
+import { getDict, tt } from '@/lib/i18n';
 
 interface Props {
   locale: Locale;
@@ -13,6 +15,8 @@ export default function AddToCartButton({ locale, item, label }: Props) {
   const { add } = useCart();
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
+  const ui = getUi(locale);
+  const cartLabel = tt(getDict(locale), 'common.cart');
 
   function handleAdd() {
     add(item, qty);
@@ -50,14 +54,14 @@ export default function AddToCartButton({ locale, item, label }: Props) {
             : 'bg-[var(--color-accent)] text-white hover:bg-[var(--color-accent-2)]'
         }`}
       >
-        {added ? '✓ Hozzáadva' : `🛒 ${label}`}
+        {added ? `✓ ${ui.added}` : `🛒 ${label}`}
       </button>
       {added && (
         <a
           href={`/${locale}/kosar`}
           className="text-sm text-[var(--color-accent-2)] underline hover:no-underline"
         >
-          Kosár megnyitása →
+          {cartLabel} →
         </a>
       )}
     </div>

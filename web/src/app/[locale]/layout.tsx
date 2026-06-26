@@ -3,6 +3,7 @@ import { Manrope, JetBrains_Mono } from 'next/font/google';
 import { isValidLocale, type Locale } from '@/lib/i18n/config';
 import { notFound } from 'next/navigation';
 import { pageAlternates } from '@/lib/seo';
+import { getUi } from '@/lib/i18n/ui-strings';
 import '../globals.css';
 
 const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://ebc-comfort.netlify.app';
@@ -230,6 +231,7 @@ interface Props {
 export default async function LocaleLayout({ children, params }: Props) {
   const { locale } = await params;
   if (!isValidLocale(locale)) notFound();
+  const loc = locale as Locale;
 
   return (
     <html
@@ -249,7 +251,7 @@ export default async function LocaleLayout({ children, params }: Props) {
         <AmbientParticles count={14} />
         <ReadingProgress />
         {children}
-        <BackToTop />
+        <BackToTop ariaLabel={getUi(loc).back_to_top} />
       </body>
     </html>
   );

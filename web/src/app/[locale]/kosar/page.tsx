@@ -1,5 +1,7 @@
 import { notFound } from 'next/navigation';
 import { isValidLocale, Locale } from '@/lib/i18n/config';
+import { getDict, tt } from '@/lib/i18n';
+import { getUi } from '@/lib/i18n/ui-strings';
 import PublicShell from '@/components/PublicShell';
 import CartView from '@/components/CartView';
 
@@ -16,18 +18,16 @@ export default async function CartPage({ params }: Props) {
     !!process.env.STRIPE_SECRET_KEY &&
     !process.env.STRIPE_SECRET_KEY.includes('PLACEHOLDER');
 
+  const cartLabel = tt(getDict(locale), 'common.cart');
+  const ui = getUi(locale);
+
   return (
     <PublicShell locale={locale}>
       <div className="max-w-4xl mx-auto safe-x py-12 sm:py-16">
-        <h1 className="text-3xl sm:text-4xl font-bold mb-2">Kosár</h1>
-        <p className="text-sm text-[var(--color-muted)] mb-8">
-          Add meg a szállítási adatokat, majd indítsd a fizetést.
-        </p>
+        <h1 className="text-3xl sm:text-4xl font-bold mb-6">{cartLabel}</h1>
         {!stripeConfigured && (
           <div className="glass-card p-4 mb-6 border-l-4 border-amber-500 text-sm">
-            ⚠️ <strong>Stripe placeholder-módban:</strong> a fizetés-folyamatot tesztelheted,
-            de a rendelés a backend-en `pending` státuszban marad, és nincs valódi terhelés. Real
-            kulcs cseréje után automatikusan élesedik.
+            ⚠️ <strong>{ui.cart_demo_note}</strong>
           </div>
         )}
         <CartView locale={locale} stripeConfigured={stripeConfigured} />

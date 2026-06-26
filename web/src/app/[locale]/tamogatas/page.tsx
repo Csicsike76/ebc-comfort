@@ -1,6 +1,7 @@
 import { notFound, redirect } from 'next/navigation';
 import { pageAlternates } from '@/lib/seo';
 import { isValidLocale, Locale } from '@/lib/i18n/config';
+import { getUi } from '@/lib/i18n/ui-strings';
 import { getSupabaseServerClient } from '@/lib/supabase/server';
 import { sendSupportReceived } from '@/lib/email/send';
 import PublicShell from '@/components/PublicShell';
@@ -26,6 +27,8 @@ export default async function SupportPage({ params, searchParams }: Props) {
   async function submitSupportRequest(formData: FormData) {
     'use server';
     const { locale: lp } = await params;
+    const loc = isValidLocale(lp) ? lp : 'hu';
+    const ui = getUi(loc);
     const supa = await getSupabaseServerClient();
     const { data: { user } } = await supa.auth.getUser();
 
@@ -34,10 +37,8 @@ export default async function SupportPage({ params, searchParams }: Props) {
     const phone = String(formData.get('phone') ?? '').trim() || null;
     const reason = String(formData.get('reason') ?? '').trim();
 
-    if (!full_name || !reason) throw new Error('Név és indoklás kötelező.');
-    if (reason.length < 30) throw new Error('Az indoklás legalább 30 karakter legyen.');
-
-    const loc = isValidLocale(lp) ? lp : 'hu';
+    if (!full_name || !reason) throw new Error(ui.err_name_reason_required);
+    if (reason.length < 30) throw new Error(ui.err_reason_min);
     const { error } = await supa.from('support_requests').insert({
       user_id: user?.id ?? null,
       full_name,
@@ -69,7 +70,7 @@ export default async function SupportPage({ params, searchParams }: Props) {
 
     const email = String(formData.get('email') ?? '').trim();
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      throw new Error('Érvénytelen email-cím.');
+      throw new Error(getUi(isValidLocale(lp) ? lp : 'hu').err_invalid_email);
     }
     const topic = String(formData.get('topic') ?? 'donation');
 
