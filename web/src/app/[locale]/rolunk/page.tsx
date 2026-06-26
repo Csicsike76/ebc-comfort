@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { pageAlternates } from '@/lib/seo';
 import { isValidLocale, Locale } from '@/lib/i18n/config';
 import PublicShell from '@/components/PublicShell';
 import { getPublicPagesDict } from '@/lib/i18n/public-pages';
@@ -12,6 +13,11 @@ function renderBold(text: string): React.ReactNode {
   return parts.map((chunk, idx) =>
     idx % 2 === 1 ? <strong key={idx}>{chunk}</strong> : <span key={idx}>{chunk}</span>,
   );
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<import('next').Metadata> {
+  const { locale } = await params;
+  return { alternates: pageAlternates(locale, '/rolunk') };
 }
 
 export default async function AboutPage({ params }: Props) {

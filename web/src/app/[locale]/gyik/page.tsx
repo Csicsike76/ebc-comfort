@@ -1,10 +1,16 @@
 import { notFound } from 'next/navigation';
+import { pageAlternates } from '@/lib/seo';
 import { isValidLocale, Locale } from '@/lib/i18n/config';
 import PublicShell from '@/components/PublicShell';
 import { getPublicPagesDict } from '@/lib/i18n/public-pages';
 
 interface Props {
   params: Promise<{ locale: string }>;
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<import('next').Metadata> {
+  const { locale } = await params;
+  return { alternates: pageAlternates(locale, '/gyik') };
 }
 
 export default async function FaqPage({ params }: Props) {

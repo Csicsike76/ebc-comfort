@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import { pageAlternates } from '@/lib/seo';
 import { isValidLocale, Locale, FALLBACK_LOCALE } from '@/lib/i18n/config';
 import { getDict, tt } from '@/lib/i18n';
 import { getSupabaseServerClient } from '@/lib/supabase/server';
@@ -23,6 +24,11 @@ interface ImageRow {
   url: string;
   alt_text: Record<string, string> | null;
   display_order: number;
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<import('next').Metadata> {
+  const { locale } = await params;
+  return { alternates: pageAlternates(locale, '/termek') };
 }
 
 export default async function ProductPage({ params }: Props) {

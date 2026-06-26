@@ -11,6 +11,7 @@ import MobileNav from '@/components/MobileNav';
 import { CartProvider } from '@/lib/cart/CartContext';
 import { Locale } from '@/lib/i18n/config';
 import { getDict, tt } from '@/lib/i18n';
+import { getFooterNav } from '@/lib/i18n/footer-nav';
 
 interface Props {
   locale: Locale;
@@ -20,6 +21,7 @@ interface Props {
 export default function PublicShell({ locale, children }: Props) {
   const dict = getDict(locale);
   const t = (key: string) => tt(dict, key);
+  const fn = getFooterNav(locale);
 
   return (
     <CartProvider>
@@ -46,7 +48,7 @@ export default function PublicShell({ locale, children }: Props) {
                 {t('common.about')}
               </a>
               <a href={`/${locale}/gyik`} className="hover:text-[var(--color-accent-2)]">
-                GY.I.K.
+                {fn.faq}
               </a>
             </nav>
             <div className="flex items-center gap-2">
@@ -60,9 +62,9 @@ export default function PublicShell({ locale, children }: Props) {
                   { href: '/edukacio', label: t('common.education') },
                   { href: '/tamogatas', label: t('common.support') },
                   { href: '/rolunk', label: t('common.about') },
-                  { href: '/gyik', label: 'GY.I.K.' },
-                  { href: '/aszf', label: 'ÁSZF' },
-                  { href: '/adatvedelem', label: 'Adatvédelem' },
+                  { href: '/gyik', label: fn.faq },
+                  { href: '/aszf', label: fn.terms },
+                  { href: '/adatvedelem', label: fn.privacy },
                 ]}
               />
             </div>
@@ -81,12 +83,12 @@ export default function PublicShell({ locale, children }: Props) {
             <div className="glass-card p-4 text-center">
               <p className="text-xs text-[var(--color-muted)] flex flex-wrap justify-center gap-x-3 gap-y-1">
                 <span>© 2026 EBC Wellness · {locale.toUpperCase()}</span>
-                <a href={`/${locale}/aszf`} className="hover:underline">ÁSZF</a>
-                <a href={`/${locale}/adatvedelem`} className="hover:underline">Adatvédelem</a>
-                <a href={`/${locale}/cookie-tajekoztato`} className="hover:underline">Cookie</a>
-                <a href={`/${locale}/gyik`} className="hover:underline">GY.I.K.</a>
+                <a href={`/${locale}/aszf`} className="hover:underline">{fn.terms}</a>
+                <a href={`/${locale}/adatvedelem`} className="hover:underline">{fn.privacy}</a>
+                <a href={`/${locale}/cookie-tajekoztato`} className="hover:underline">{fn.cookie}</a>
+                <a href={`/${locale}/gyik`} className="hover:underline">{fn.faq}</a>
                 <a href={`/${locale}/rolunk`} className="hover:underline">{t('common.about')}</a>
-                <CookieSettingsLink locale={locale} />
+                <CookieSettingsLink label={fn.cookie_settings} />
               </p>
             </div>
           </div>

@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next';
-import { SUPPORTED_LOCALES } from '@/lib/i18n/config';
+import { SUPPORTED_LOCALES, DEFAULT_LOCALE } from '@/lib/i18n/config';
 
 const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://ebc-comfort.netlify.app';
 
@@ -27,9 +27,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
         changeFrequency: path === '' || path === '/termek' ? 'weekly' : 'monthly',
         priority: path === '' ? 1.0 : path === '/termek' ? 0.9 : 0.6,
         alternates: {
-          languages: Object.fromEntries(
-            SUPPORTED_LOCALES.map((l) => [l, `${SITE}/${l}${path}`])
-          ),
+          languages: {
+            ...Object.fromEntries(SUPPORTED_LOCALES.map((l) => [l, `${SITE}/${l}${path}`])),
+            'x-default': `${SITE}/${DEFAULT_LOCALE}${path}`,
+          },
         },
       });
     }

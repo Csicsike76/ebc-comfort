@@ -1,4 +1,5 @@
 import { notFound, redirect } from 'next/navigation';
+import { pageAlternates } from '@/lib/seo';
 import { isValidLocale, Locale } from '@/lib/i18n/config';
 import { getSupabaseServerClient } from '@/lib/supabase/server';
 import { sendSupportReceived } from '@/lib/email/send';
@@ -8,6 +9,11 @@ import { getPublicPagesDict } from '@/lib/i18n/public-pages';
 interface Props {
   params: Promise<{ locale: string }>;
   searchParams: Promise<{ done?: string }>;
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<import('next').Metadata> {
+  const { locale } = await params;
+  return { alternates: pageAlternates(locale, '/tamogatas') };
 }
 
 export default async function SupportPage({ params, searchParams }: Props) {

@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from 'next';
 import { Manrope, JetBrains_Mono } from 'next/font/google';
-import { isValidLocale, SUPPORTED_LOCALES, type Locale } from '@/lib/i18n/config';
+import { isValidLocale, type Locale } from '@/lib/i18n/config';
 import { notFound } from 'next/navigation';
+import { pageAlternates } from '@/lib/seo';
 import '../globals.css';
 
 const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://ebc-comfort.netlify.app';
@@ -161,10 +162,6 @@ export async function generateMetadata({
   const loc = (isValidLocale(locale) ? locale : 'hu') as Locale;
   const meta = META_BY_LOCALE[loc] ?? META_BY_LOCALE.hu!;
 
-  const languages = Object.fromEntries(
-    SUPPORTED_LOCALES.map((l) => [l, `${SITE}/${l}`])
-  );
-
   return {
     title: meta.title,
     description: meta.description,
@@ -183,10 +180,7 @@ export async function generateMetadata({
       apple: '/icons/apple-touch-icon.png',
     },
     metadataBase: new URL(SITE),
-    alternates: {
-      canonical: `${SITE}/${loc}`,
-      languages,
-    },
+    alternates: pageAlternates(loc, ''),
     openGraph: {
       type: 'website',
       title: meta.title,

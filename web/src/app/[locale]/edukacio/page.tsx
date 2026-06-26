@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { pageAlternates } from '@/lib/seo';
 import { notFound } from 'next/navigation';
 import { isValidLocale, Locale, FALLBACK_LOCALE } from '@/lib/i18n/config';
 import { getSupabaseServerClient } from '@/lib/supabase/server';
@@ -24,6 +25,11 @@ interface CategoryRow {
   id: string;
   slug: string;
   article_category_translations: { locale: string; name: string }[];
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<import('next').Metadata> {
+  const { locale } = await params;
+  return { alternates: pageAlternates(locale, '/edukacio') };
 }
 
 export default async function EducationList({ params, searchParams }: Props) {
