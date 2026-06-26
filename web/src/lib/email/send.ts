@@ -6,6 +6,7 @@ import {
   supportRequestReceivedEmail,
 } from './templates';
 import { getSupabaseAdmin } from '@/lib/supabase/admin';
+import type { Locale } from '@/lib/i18n/config';
 
 type TemplateKey = 'order_confirmation' | 'shipping_update' | 'nps_survey' | 'support_received';
 
@@ -34,6 +35,7 @@ async function logEmail(p: LogParams): Promise<void> {
 }
 
 interface OrderEmailInput {
+  locale: Locale;
   order_number: string;
   customer_name: string;
   customer_email: string;
@@ -52,7 +54,7 @@ interface OrderEmailInput {
 }
 
 export async function sendOrderConfirmation(o: OrderEmailInput): Promise<SendEmailResult> {
-  const tmpl = orderConfirmationEmail(o);
+  const tmpl = orderConfirmationEmail(o.locale, o);
   const result = await sendEmail({
     to: o.customer_email,
     subject: tmpl.subject,
@@ -71,7 +73,7 @@ export async function sendOrderConfirmation(o: OrderEmailInput): Promise<SendEma
 }
 
 export async function sendShippingUpdate(o: OrderEmailInput): Promise<SendEmailResult> {
-  const tmpl = shippingUpdateEmail(o);
+  const tmpl = shippingUpdateEmail(o.locale, o);
   const result = await sendEmail({
     to: o.customer_email,
     subject: tmpl.subject,
@@ -90,13 +92,14 @@ export async function sendShippingUpdate(o: OrderEmailInput): Promise<SendEmailR
 }
 
 export async function sendNpsSurvey(p: {
+  locale: Locale;
   order_number: string;
   customer_name: string;
   customer_email: string;
   customer_user_id?: string | null;
   survey_url: string;
 }): Promise<SendEmailResult> {
-  const tmpl = npsSurveyEmail(p);
+  const tmpl = npsSurveyEmail(p.locale, p);
   const result = await sendEmail({
     to: p.customer_email,
     subject: tmpl.subject,
@@ -115,12 +118,13 @@ export async function sendNpsSurvey(p: {
 }
 
 export async function sendSupportReceived(p: {
+  locale: Locale;
   email: string;
   full_name: string;
   reason: string;
   user_id?: string | null;
 }): Promise<SendEmailResult> {
-  const tmpl = supportRequestReceivedEmail({
+  const tmpl = supportRequestReceivedEmail(p.locale, {
     full_name: p.full_name,
     reason_excerpt: p.reason.slice(0, 300) + (p.reason.length > 300 ? '…' : ''),
   });

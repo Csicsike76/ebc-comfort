@@ -3,6 +3,7 @@ import { headers } from 'next/headers';
 import { getSupabaseAdmin } from '@/lib/supabase/admin';
 import { verifyRetellSignature, isRetellConfigured } from '@/lib/retell';
 import { sendSupportReceived } from '@/lib/email/send';
+import { isValidLocale } from '@/lib/i18n/config';
 
 export const runtime = 'nodejs';
 
@@ -51,6 +52,9 @@ export async function POST(req: Request) {
   // where the call.from_number is missing.
   const phone = body.call?.from_number?.trim() || (args.phone ?? '').trim() || null;
   const callId = body.call?.call_id?.trim() ?? '';
+  // Voice agent runs HU/EN/DE; use the spoken language if Retell passes it, else HU.
+  const langArg = String((args as { language?: string }).language ?? '').trim().toLowerCase();
+  const locale = isValidLocale(langArg) ? langArg : 'hu';
 
   if (!full_name || reason.length < 10) {
     return NextResponse.json({
@@ -86,6 +90,7 @@ export async function POST(req: Request) {
     reason,
     status: 'pending',
     source_call_id: callId || null,
+    locale,
   });
 
   if (error) {
@@ -93,7 +98,7 @@ export async function POST(req: Request) {
   }
 
   if (email) {
-    await sendSupportReceived({ email, full_name, reason }).catch(() => undefined);
+    await sendSupportReceived({ locale, email, full_name, reason }).catch(() => undefined);
   }
 
   return NextResponse.json({

@@ -31,6 +31,7 @@ export default async function SupportPage({ params, searchParams }: Props) {
     if (!full_name || !reason) throw new Error('Név és indoklás kötelező.');
     if (reason.length < 30) throw new Error('Az indoklás legalább 30 karakter legyen.');
 
+    const loc = isValidLocale(lp) ? lp : 'hu';
     const { error } = await supa.from('support_requests').insert({
       user_id: user?.id ?? null,
       full_name,
@@ -38,11 +39,13 @@ export default async function SupportPage({ params, searchParams }: Props) {
       phone,
       reason,
       status: 'pending',
+      locale: loc,
     });
     if (error) throw new Error(error.message);
 
     if (email) {
       await sendSupportReceived({
+        locale: loc,
         email,
         full_name,
         reason,

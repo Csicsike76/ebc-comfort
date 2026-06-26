@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { requireAdmin, formatMoneyCents, formatDateTime } from '@/lib/admin/guard';
 import { sendShippingUpdate } from '@/lib/email/send';
 import { getBillingProvider } from '@/lib/billing/provider';
+import { isValidLocale } from '@/lib/i18n/config';
 
 interface Props {
   params: Promise<{ locale: string; id: string }>;
@@ -50,6 +51,7 @@ interface OrderDetail {
   shipped_at: string | null;
   delivered_at: string | null;
   user_id: string | null;
+  locale: string;
   profiles: { email: string; full_name: string | null; phone: string | null } | null;
   order_items: OrderItemRow[];
 }
@@ -70,7 +72,7 @@ export default async function AdminOrderDetail({ params }: Props) {
       subtotal_cents, shipping_cents, vat_cents, total_cents,
       shipping_address, billing_address, shipping_method, notes,
       tracking_number, tracking_url,
-      created_at, paid_at, shipped_at, delivered_at, user_id,
+      created_at, paid_at, shipped_at, delivered_at, user_id, locale,
       profiles:profiles!orders_user_id_fkey ( email, full_name, phone ),
       order_items ( id, quantity, unit_price_cents, line_total_cents, products ( sku, slug ) )
     `)
@@ -111,6 +113,7 @@ export default async function AdminOrderDetail({ params }: Props) {
       const customerEmail = order.profiles?.email ?? '';
       if (customerEmail) {
         await sendShippingUpdate({
+          locale: isValidLocale(order.locale) ? order.locale : 'hu',
           order_number: order.order_number,
           customer_name: addr?.name ?? order.profiles?.full_name ?? 'Vásárló',
           customer_email: customerEmail,

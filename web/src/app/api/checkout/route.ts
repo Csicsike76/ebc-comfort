@@ -164,6 +164,7 @@ export async function POST(req: Request) {
       shipping_phone: shipping_address.phone ?? null,
       utm_campaign: attribution.utm_campaign,
       utm_source: attribution.utm_source,
+      locale,
     })
     .select('id, order_number')
     .single();
@@ -195,6 +196,7 @@ export async function POST(req: Request) {
 
   // Order-confirmation email (best-effort, non-blocking on failure)
   await sendOrderConfirmation({
+    locale,
     order_number: orderRow.order_number,
     customer_name: shipping_address.name,
     customer_email: shipping_address.email,
