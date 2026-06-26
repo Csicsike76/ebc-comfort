@@ -150,7 +150,7 @@ export default async function ProductPage({ params }: Props) {
               {formatMoneyCents(product.base_price_cents, product.currency)}
             </div>
             <p className="text-xs text-[var(--color-muted)] mt-1">
-              ÁFA-val · szállítás kalkulálva a kosárban
+              {getUi(locale).product_tax_note}
             </p>
 
             <div className="mt-8">

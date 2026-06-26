@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { pageAlternates } from '@/lib/seo';
 import { notFound } from 'next/navigation';
 import { isValidLocale, Locale, FALLBACK_LOCALE } from '@/lib/i18n/config';
+import { getDict, tt } from '@/lib/i18n';
+import { getUi } from '@/lib/i18n/ui-strings';
 import { getSupabaseServerClient } from '@/lib/supabase/server';
 import { formatDate } from '@/lib/admin/guard';
 import PublicShell from '@/components/PublicShell';
@@ -97,10 +99,9 @@ export default async function EducationList({ params, searchParams }: Props) {
     <PublicShell locale={locale}>
       <div className="max-w-6xl mx-auto safe-x py-12 sm:py-16">
         <div className="glass-card p-7 sm:p-10 mb-8">
-          <h1 className="text-3xl sm:text-4xl font-bold mb-3">Edukáció</h1>
+          <h1 className="text-3xl sm:text-4xl font-bold mb-3">{tt(getDict(locale), 'common.education')}</h1>
           <p className="text-base text-[var(--color-muted)] leading-relaxed">
-            Női egészség, hőterápia, önmegfigyelés. Forrásokkal alátámasztott, érthető cikkek.
-            EBC Wellness — független, ingyenes tudás.
+            {getUi(locale).edukacio_intro}
           </p>
         </div>
 
@@ -128,7 +129,7 @@ export default async function EducationList({ params, searchParams }: Props) {
 
         {rows.length === 0 ? (
           <div className="glass-card p-10 text-center text-[var(--color-muted)]">
-            Még nincs publikált cikk ebben a kategóriában. Iratkozz fel a hírlevélre — értesítünk!
+            {getUi(locale).edukacio_empty}
           </div>
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
