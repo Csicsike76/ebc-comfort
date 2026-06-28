@@ -5,6 +5,8 @@ import { SITE } from '@/lib/seo';
 const LOGO = `${SITE}/brand/logo-luxus.png`;
 const ORG_NAME = 'EBC Comfort';
 
+const LOCALES_24 = ['hu', 'en', 'de', 'fr', 'it', 'es', 'pl', 'ro', 'nl', 'pt', 'cs', 'sk', 'sv', 'da', 'fi', 'bg', 'hr', 'et', 'el', 'ga', 'lv', 'lt', 'mt', 'sl'];
+
 export function organizationLd() {
   return {
     '@context': 'https://schema.org',
@@ -16,7 +18,46 @@ export function organizationLd() {
     image: LOGO,
     description:
       'EBC Comfort — discreet, portable warmth for lower-abdominal comfort. A wellness device (not a medical device) with a supported-access NGO programme for low-income women.',
-    knowsAbout: ["women's health", 'heat therapy', 'wellness', 'menstrual comfort'],
+    knowsAbout: ["women's health", 'heat therapy', 'wellness', 'menstrual comfort', 'period pain relief'],
+    areaServed: 'EU',
+    contactPoint: {
+      '@type': 'ContactPoint',
+      email: 'hello@ebc-wellness.eu',
+      contactType: 'customer support',
+      areaServed: 'EU',
+      availableLanguage: LOCALES_24,
+    },
+  };
+}
+
+interface ArticleLdInput {
+  locale: string;
+  url: string;             // full canonical URL of the article
+  headline: string;
+  description: string;
+  image?: string | null;
+  datePublished?: string | null;
+  citations?: { name: string; url?: string | null }[];
+}
+
+export function articleLd(a: ArticleLdInput) {
+  const cites = (a.citations ?? []).map((c) =>
+    c.url ? { '@type': 'CreativeWork', name: c.name, url: c.url } : { '@type': 'CreativeWork', name: c.name }
+  );
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: a.headline,
+    description: a.description,
+    inLanguage: a.locale,
+    ...(a.image ? { image: a.image.startsWith('http') ? a.image : `${SITE}${a.image}` } : { image: LOGO }),
+    ...(a.datePublished ? { datePublished: a.datePublished } : {}),
+    mainEntityOfPage: a.url,
+    author: { '@type': 'Organization', name: ORG_NAME, url: SITE },
+    publisher: { '@type': 'Organization', name: ORG_NAME, logo: { '@type': 'ImageObject', url: LOGO } },
+    about: ["women's health", 'heat therapy', 'wellness'],
+    ...(cites.length ? { citation: cites } : {}),
+    isAccessibleForFree: true,
   };
 }
 

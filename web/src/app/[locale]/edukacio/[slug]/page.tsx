@@ -1,9 +1,14 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { isValidLocale, Locale, FALLBACK_LOCALE } from '@/lib/i18n/config';
+import { getDict, tt } from '@/lib/i18n';
+import { getUi } from '@/lib/i18n/ui-strings';
 import { getSupabaseServerClient } from '@/lib/supabase/server';
 import { formatDate } from '@/lib/admin/guard';
 import { renderMarkdown } from '@/lib/markdown';
+import { articleLd } from '@/lib/seo-jsonld';
+import { SITE } from '@/lib/seo';
+import JsonLd from '@/components/JsonLd';
 import PublicShell from '@/components/PublicShell';
 
 interface Props {
@@ -59,12 +64,23 @@ export default async function ArticleDetail({ params }: Props) {
 
   return (
     <PublicShell locale={locale}>
+      <JsonLd
+        data={articleLd({
+          locale,
+          url: `${SITE}/${locale}/edukacio/${slug}`,
+          headline: tr.title,
+          description: tr.excerpt ?? tr.meta_description ?? tr.title,
+          image: article.featured_image_url,
+          datePublished: article.published_at,
+          citations: ((sources ?? []) as SourceRow[]).map((s) => ({ name: s.citation, url: s.url })),
+        })}
+      />
       <article className="max-w-3xl mx-auto safe-x py-12 sm:py-16">
         <Link
           href={`/${locale}/edukacio`}
           className="text-xs text-[var(--color-muted)] hover:underline"
         >
-          ← Edukáció
+          ← {tt(getDict(locale), 'common.education')}
         </Link>
 
         <header className="mt-3 mb-6">
@@ -99,7 +115,7 @@ export default async function ArticleDetail({ params }: Props) {
 
         {((sources ?? []) as SourceRow[]).length > 0 && (
           <section className="mt-8 glass-card p-6">
-            <h2 className="font-bold mb-3">Források</h2>
+            <h2 className="font-bold mb-3">{getUi(locale).sources_heading}</h2>
             <ol className="list-decimal pl-5 space-y-2 text-sm">
               {((sources ?? []) as SourceRow[]).map((s, i) => (
                 <li key={i}>
@@ -122,8 +138,7 @@ export default async function ArticleDetail({ params }: Props) {
         )}
 
         <div className="mt-8 glass-card p-6 text-sm text-[var(--color-muted)] italic">
-          A cikkek EBC Wellness által nyújtott edukációs tartalmak. NEM helyettesítik a szakorvosi
-          konzultációt. Egészségügyi panasz esetén keress fel szakorvost.
+          {getUi(locale).article_disclaimer}
         </div>
       </article>
     </PublicShell>
